@@ -1,7 +1,9 @@
 body {
     margin: 0;
+    background-color: #202123; /* ChatGPT dark background */
     font-family: Arial, sans-serif;
   }
+  
   #map {
     width: 100vw;
     height: 100vh;
@@ -9,22 +11,36 @@ body {
     position: relative; /* Required for z-index to work */
   }
 
-
+  #map-container {
+    position: relative;
+  }
+  
+  #svg-map {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10; /* Ensure flight track SVG is above other layers */
+  }
+  
   .info-box {
     position: absolute;
-    bottom: 10px;
-    left: 10px;
-    background: rgba(255, 255, 255, 0.8);
-    padding: 10px;
+    background: rgba(30, 30, 30, 0.9);
+    color: white;
+    border: 1px solid lime;
     border-radius: 5px;
+    padding: 10px;
+    width: 300px;
     display: none;
     width: 300px;
     z-index: 1000; /* Ensure the info box appears on top */
   }
+  
   .info-box img {
     width: 100%;
     border-radius: 5px;
   }
-
-
+  
+  .info-box p {
+    margin: 10px 0 0;
+  }
   
