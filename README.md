@@ -1,3 +1,1 @@
-# The BosWash Megalopolis 
-
-lorem ipsum dolor sit amet
+# yamada-hiroyuki.github.io
