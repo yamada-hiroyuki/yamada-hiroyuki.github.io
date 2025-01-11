@@ -272,13 +272,13 @@ const captions = {
   79: "Zoomed in shot of DC. Context pic a few seconds later.",
   80: "Zoomed out - 0.6x shot - showing context for the zoomed in pic a few seconds earlier.",
   94: "Approaching the  the southern terminus of the Bos-Wash Megalopolis.",
-  97: "View of Washington, DC and Arlington, VA"
-  98: "Washington, DC blending into the greater DelMarVa"
+  97: "View of Washington, DC and Arlington, VA",
+  98: "Washington, DC blending into the greater DelMarVa",
   101: "The megalopolis continues, with a view of Annapolis in the distance",
-  102: "Annapolis, MD"
+  102: "Annapolis, MD",
   103: "Annapolis, MD, with foreground context to capture the city's luminosity compared to the surrounding area.",
   104: "Wide angle picture of Annapolis, MD, with foreground context to capture the city's luminosity compared to the surrounding area.",
-  107: "Looking down , crossing from Maryland into Pennsylvania."
+  107: "Looking down , crossing from Maryland into Pennsylvania.",
   111: "Looking back, leaving DelMarVa.",
   116: "Near Wilmington, DE.",
   118: "Wilmington, DE",
@@ -334,18 +334,18 @@ function renderInteractivePip(index, imagePath, captionKey) {
     .attr("cx", x)
     .attr("cy", y)
     .attr("r", 6)
-    .attr("fill", "red")
+    .attr("fill", "dark-re")
     .attr("stroke", "white")
     .attr("stroke-width", 2)
     .on("mouseover", function () {
       if (activePip !== this) {
-        d3.select(this).attr("r", 8).attr("fill", "yellow"); // Highlight on hover
+        d3.select(this).attr("r", 8).attr("fill", "green"); // Highlight on hover
         showInfoPane(imagePath, captions[captionKey]);
       }
     })
     .on("mouseout", function () {
       if (activePip !== this) {
-        d3.select(this).attr("r", 6).attr("fill", "red"); // Reset pip styling
+        d3.select(this).attr("r", 6).attr("fill", "dark-grey"); // Reset pip styling
         const infoBox = document.getElementById("info-box");
         infoBox.style.display = "none"; // Hide info pane
       }
@@ -356,18 +356,18 @@ function renderInteractivePip(index, imagePath, captionKey) {
       if (activePip === this) {
         // If this pip is already active, reset it
         activePip = null;
-        d3.select(this).attr("r", 6).attr("fill", "red");
+        d3.select(this).attr("r", 6).attr("fill", "dark-gray");
         const infoBox = document.getElementById("info-box");
         infoBox.style.display = "none"; // Hide the info pane
       } else {
         // Deactivate any previously active pip
         if (activePip) {
-          d3.select(activePip).attr("r", 6).attr("fill", "red");
+          d3.select(activePip).attr("r", 6).attr("fill", "dark-gray");
         }
 
         // Activate the current pip
         activePip = this;
-        d3.select(this).attr("r", 8).attr("fill", "yellow");
+        d3.select(this).attr("r", 8).attr("fill", "green");
         showInfoPane(imagePath, captions[captionKey], true);
       }
     });
@@ -376,7 +376,7 @@ function renderInteractivePip(index, imagePath, captionKey) {
 // Handle clicks elsewhere on the map to hide the active pip
 map.on("click", () => {
   if (activePip) {
-    d3.select(activePip).attr("r", 6).attr("fill", "red"); // Reset active pip styling
+    d3.select(activePip).attr("r", 6).attr("fill", "dark-gray"); // Reset active pip styling
     const infoBox = document.getElementById("info-box");
     infoBox.style.display = "none"; // Hide the info pane
     activePip = null; // Reset the active pip tracker
