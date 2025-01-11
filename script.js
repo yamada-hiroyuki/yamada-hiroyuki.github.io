@@ -266,7 +266,7 @@ const flightTrack = [
 
 const captions = {
   1: "caption 1",
-  2: "caption 2",
+  21: "caption 21",
 };
 
 const processedFlightTrack = flightTrack.map((d) => ({
@@ -307,13 +307,15 @@ function showInfoPane(imageSrc, caption, persistent = false) {
     });
   }
 }
+let activePip = null; // Tracks the currently active (persistent) pip
 
-// Render a pip with hover and click interactivity
 function renderInteractivePip(index, imagePath, captionKey) {
   const pipData = processedFlightTrack[index];
   const [x, y] = projectPoint(pipData.lat, pipData.lon);
 
-  g.append("circle")
+  // Append the pip and give it a unique ID
+  const circle = g.append("circle")
+    .attr("id", `pip-${index}`)
     .attr("cx", x)
     .attr("cy", y)
     .attr("r", 6)
@@ -321,36 +323,82 @@ function renderInteractivePip(index, imagePath, captionKey) {
     .attr("stroke", "white")
     .attr("stroke-width", 2)
     .on("mouseover", function () {
-      d3.select(this).attr("r", 8).attr("fill", "yellow"); // Highlight on hover
-      showInfoPane(imagePath, captions[captionKey]);
+      if (activePip !== this) {
+        d3.select(this).attr("r", 8).attr("fill", "yellow"); // Highlight on hover
+        showInfoPane(imagePath, captions[captionKey]);
+      }
     })
     .on("mouseout", function () {
-      d3.select(this).attr("r", 6).attr("fill", "red"); // Reset on mouse out
+      if (activePip !== this) {
+        d3.select(this).attr("r", 6).attr("fill", "red"); // Reset pip styling
+        const infoBox = document.getElementById("info-box");
+        infoBox.style.display = "none"; // Hide info pane
+      }
     })
     .on("click", function (event) {
-      event.stopPropagation(); // Prevent event bubbling to hide the pane
-      showInfoPane(imagePath, captions[captionKey], true);
+      event.stopPropagation(); // Prevent bubbling to hide the pane
+
+      if (activePip === this) {
+        // If this pip is already active, reset it
+        activePip = null;
+        d3.select(this).attr("r", 6).attr("fill", "red");
+        const infoBox = document.getElementById("info-box");
+        infoBox.style.display = "none"; // Hide the info pane
+      } else {
+        // Deactivate any previously active pip
+        if (activePip) {
+          d3.select(activePip).attr("r", 6).attr("fill", "red");
+        }
+
+        // Activate the current pip
+        activePip = this;
+        d3.select(this).attr("r", 8).attr("fill", "yellow");
+        showInfoPane(imagePath, captions[captionKey], true);
+      }
     });
 }
+
+// Handle clicks elsewhere on the map to hide the active pip
+map.on("click", () => {
+  if (activePip) {
+    d3.select(activePip).attr("r", 6).attr("fill", "red"); // Reset active pip styling
+    const infoBox = document.getElementById("info-box");
+    infoBox.style.display = "none"; // Hide the info pane
+    activePip = null; // Reset the active pip tracker
+  }
+});
+
+
+
+
+
 
 // Update the SVG on map interaction
 function updateSVG() {
   updateSVGBounds();
+
+  // Update flight track line
   const lineData = processedFlightTrack.map((d) => projectPoint(d.lat, d.lon));
   g.select("path")
     .datum(lineData)
     .attr("d", d3.line().x((d) => d[0]).y((d) => d[1]).curve(d3.curveNatural));
 
-  // Update pip position
-  const pipData = processedFlightTrack[1];
-  const [x, y] = projectPoint(pipData.lat, pipData.lon);
-  g.select("circle").attr("cx", x).attr("cy", y);
+  // Update interactive pip position
+  processedFlightTrack.forEach((pipData, index) => {
+    const [x, y] = projectPoint(pipData.lat, pipData.lon);
+    g.select(`#pip-${index}`)
+      .attr("cx", x)
+      .attr("cy", y);
+  });
 }
+
 
 // Initial render
 updateSVGBounds();
 renderFlightTrack(processedFlightTrack);
 renderInteractivePip(1, "/data/images/image1.jpg", 1);
+renderInteractivePip(21, "/data/images/image21.jpg", 21);
+
 
 // Attach update event listeners to the map
 map.on("zoomend moveend", updateSVG);
