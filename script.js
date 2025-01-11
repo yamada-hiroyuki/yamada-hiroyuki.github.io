@@ -1,5 +1,5 @@
 // Initialize the Leaflet map
-const map = L.map("map", { maxZoom: 11 }).setView([35.2251, -80.9359], 7);
+const map = L.map("map", { maxZoom: 11 }).setView([38.8945,-77.0104], 7);
 
 L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
   maxZoom: 11,
@@ -271,6 +271,17 @@ const captions = {
   77: "Richmond, VA, at approx 50x zoom from an altitude of 33,000'",
   79: "Zoomed in shot of DC. Context pic a few seconds later.",
   80: "Zoomed out - 0.6x shot - showing context for the zoomed in pic a few seconds earlier.",
+  94: "Approaching the  the southern terminus of the Bos-Wash Megalopolis.",
+  97: "View of Washington, DC and Arlington, VA"
+  98: "Washington, DC blending into the greater DelMarVa"
+  101: "The megalopolis continues, with a view of Annapolis in the distance",
+  102: "Annapolis, MD"
+  103: "Annapolis, MD, with foreground context to capture the city's luminosity compared to the surrounding area.",
+  104: "Wide angle picture of Annapolis, MD, with foreground context to capture the city's luminosity compared to the surrounding area.",
+  107: "Looking down , crossing from Maryland into Pennsylvania."
+  111: "Looking back, leaving DelMarVa.",
+  116: "Near Wilmington, DE.",
+  118: "Wilmington, DE",
 };
 
 const processedFlightTrack = flightTrack.map((d) => ({
@@ -400,37 +411,6 @@ function updateSVG() {
 // Initial render
 updateSVGBounds();
 renderFlightTrack(processedFlightTrack);
-
-
-
-
-REMOVE CAPTIONS FormData
-
-const captions = {
-  1: "CLT Airport - D / E gates",
-  14: "Greensboro, NC, from 23,000' altitude and ~20 mi distance, through a cell phone telephoto lens",
-  44: "Raleigh, NC, looking northwest torward Durham, NC",
-  77: "Richmond, VA, at approx 50x zoom from an altitude of 33,000'",
-  79: "Zoomed in shot of DC. Context pic a few seconds later.",
-  80: "Zoomed out - 0.6x shot - showing context for the zoomed in pic a few seconds earlier.",
-  94: "Approaching the  the southern terminus of the Bos-Wash Megalopolis.",
-  97: "View of Washington, DC and Arlington, VA"
-  98: "Washington, DC blending into the greater DelMarVa"
-  101: "The megalopolis continues, with a view of Annapolis in the distance",
-  102: "Annapolis, MD"
-  103: "Annapolis, MD, with foreground context to capture the city's luminosity compared to the surrounding area.",
-  104: "Wide angle picture of Annapolis, MD, with foreground context to capture the city's luminosity compared to the surrounding area.",
-  107: "Looking down , crossing from Maryland into Pennsylvania."
-  111: "Looking back, leaving DelMarVa.",
-  116: "Near Wilmington, DE.",
-  118: "Wilmington, DE",
-   
-
-
-
-
-};
-
 
 
 
