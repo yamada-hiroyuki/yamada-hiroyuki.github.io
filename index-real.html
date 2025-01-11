@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Flight Map</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    #map {
+      position: relative;
+      width: 75vw;
+      height: 75vh;
+      background: url('data/images/us.svg') no-repeat center center;
+      background-size: cover;
+      overflow: hidden;
+    }
+    .info-box {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 10px;
+      border-radius: 5px;
+      display: none;
+      width: 300px;
+    }
+    .info-box img {
+      width: 100%;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="map">
+  <svg id="flight-path" width="100%" height="100%" style="position: absolute; top: 0; left: 0;"></svg>
+  <div class="info-box" id="info-box">
+    <img id="info-image" src="" alt="">
+    <p id="info-text"></p>
+  </div>
+</div>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+  // Mock data for testing
+  const flightTrack = [
+    { lat: 40.0, lon: -74.0, img: 'image1.jpg', text: 'View over New York.' },
+    { lat: 39.0, lon: -75.0, img: 'image2.jpg', text: 'Flying near Philadelphia.' },
+    { lat: 38.0, lon: -76.0, img: 'image3.jpg', text: 'Beautiful skies over Maryland.' }
+  ];
+
+  const svg = d3.select("#flight-path");
+  const infoBox = document.getElementById('info-box');
+  const infoImage = document.getElementById('info-image');
+  const infoText = document.getElementById('info-text');
+
+  // Simple static scaling for mock map dimensions
+  const mapWidth = document.getElementById("map").offsetWidth;
+  const mapHeight = document.getElementById("map").offsetHeight;
+  const scaleX = d3.scaleLinear().domain([-76, -74]).range([0, mapWidth]);
+  const scaleY = d3.scaleLinear().domain([38, 40]).range([mapHeight, 0]);
+
+  // Render flight path
+  const line = d3.line()
+    .x(d => scaleX(d.lon))
+    .y(d => scaleY(d.lat));
+
+  svg.append("path")
+    .datum(flightTrack)
+    .attr("d", line)
+    .attr("fill", "none")
+    .attr("stroke", "blue")
+    .attr("stroke-width", 2);
+
+  // Render pips
+  svg.selectAll("circle")
+    .data(flightTrack)
+    .enter()
+    .append("circle")
+    .attr("cx", d => scaleX(d.lon))
+    .attr("cy", d => scaleY(d.lat))
+    .attr("r", 5)
+    .attr("fill", "red")
+    .on("mouseover", (event, d) => {
+      infoBox.style.display = 'block';
+      infoBox.style.left = `${event.pageX + 10}px`;
+      infoBox.style.top = `${event.pageY - 50}px`;
+      infoImage.src = d.img;
+      infoText.textContent = d.text;
+    })
+    .on("mouseout", () => {
+      infoBox.style.display = 'none';
+    });
+</script>
+
+</body>
+</html>
