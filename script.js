@@ -269,6 +269,8 @@ const captions = {
   14: "Greensboro, NC, from 23,000' altitude and ~20 mi distance, through a cell phone telephoto lens",
   44: "Raleigh, NC, looking northwest torward Durham, NC",
   77: "Richmond, VA, at approx 50x zoom from an altitude of 33,000'",
+  79: "Zoomed in shot of Richmond. Context pic a few seconds later.",
+  80: "Zoomed out - 0.6x shot - showing context for the zoomed in pic a few seconds earlier.",
 };
 
 const processedFlightTrack = flightTrack.map((d) => ({
@@ -398,10 +400,14 @@ function updateSVG() {
 // Initial render
 updateSVGBounds();
 renderFlightTrack(processedFlightTrack);
-renderInteractivePip(1, "/data/images/image1.jpg", 1);
-renderInteractivePip(14, "/data/images/image14.jpg", 14);
-renderInteractivePip(44, "/data/images/image44.jpg", 44);
-renderInteractivePip(77, "/data/images/image77.jpg", 77);
+
+// List of integers for the pips to render
+const pipIndices = [1, 14, 21, 44, 77, 79, 80];
+
+// Loop through the list and render pips
+pipIndices.forEach((index) => {
+  renderInteractivePip(index, `/data/images/image${index}.jpg`, index);
+});
 
 // Attach update event listeners to the map
 map.on("zoomend moveend", updateSVG);
