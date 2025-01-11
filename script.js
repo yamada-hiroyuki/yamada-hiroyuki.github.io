@@ -3,12 +3,18 @@ const map = L.map("map", {
     maxZoom: 11 // Restrict maximum zoom level here as well
   }).setView([38.88989877057183, -77.03688209146726], 7); // Centered and zoomed to flight track extent
 
-// Add the Humanitarian OpenStreetMap tile layer
-L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
-  maxZoom: 11,
-  minZoom: 7,
-  attribution: '© OpenStreetMap contributors, Humanitarian OpenStreetMap Team'
-}).addTo(map);
+  try {
+    // Example: If Leaflet or another library uses storage
+    L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
+      maxZoom: 11,
+      minZoom: 7,
+      attribution: '© OpenStreetMap contributors, Humanitarian OpenStreetMap Team'
+    }).addTo(map);
+  } catch (error) {
+    console.error("Error accessing storage:", error);
+  }
+
+
 
 // Add an SVG overlay for D3.js
 const svgOverlay = d3.select(map.getPanes().overlayPane).append("svg");
@@ -20,8 +26,8 @@ function projectPoint(lat, lon) {
   return [point.x, point.y];
 }
 
-// Load flight track data
-d3.csv("/data/flight-track.csv").then(flightData => {
+// Load flight track data from JSON
+d3.json("/data/flight-track.json").then(flightData => {
   const flightTrack = flightData.map(d => ({
     time: d.Time,
     lat: +d.Latitude,
@@ -60,13 +66,17 @@ d3.csv("/data/flight-track.csv").then(flightData => {
       });
   });
 
-  // Redraw path and pips on map zoom/move
-  const redraw = () => {
-    g.selectAll("path.flight-path").attr("d", line);
-    g.selectAll("circle")
-      .attr("cx", d => projectPoint(d.lat, d.lon)[0])
-      .attr("cy", d => projectPoint(d.lat, d.lon)[1]);
-  };
+// Redraw path and pips on map zoom/move
+const redraw = () => {
+  // Redraw the flight path
+  g.selectAll("path.flight-path").attr("d", line);
+
+  // Bind flightTrack data to circles and update their positions
+  g.selectAll("circle")
+    .data(flightTrack) // Ensure data is bound
+    .attr("cx", d => projectPoint(d.lat, d.lon)[0])
+    .attr("cy", d => projectPoint(d.lat, d.lon)[1]);
+};
 
   map.on("zoom", redraw);
   map.on("move", redraw);
