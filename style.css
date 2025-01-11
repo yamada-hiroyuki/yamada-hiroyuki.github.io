@@ -1,0 +1,30 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  #map {
+    width: 100vw;
+    height: 100vh;
+    z-index: 1; /* Ensure the map has a lower z-index */
+    position: relative; /* Required for z-index to work */
+  }
+
+
+  .info-box {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-radius: 5px;
+    display: none;
+    width: 300px;
+    z-index: 1000; /* Ensure the info box appears on top */
+  }
+  .info-box img {
+    width: 100%;
+    border-radius: 5px;
+  }
+
+
+  
