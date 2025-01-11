@@ -427,10 +427,7 @@ renderFlightTrack(processedFlightTrack);
 
 
 // List of integers for the pips to render
-const pipIndices = [1, 14, 21, 44, 77, 79, 80, 94, 97, 98, 101, 102, 103, 104, 107, 111, 116, 118];
-
-
-
+const pipIndices = [1, 14, 21, 44, 77, 79, 80, 94, 97, 98, 101, 102, 103, 104, 107, 111, 116, 118, 120, 122, 123, 124, 125, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137];
 
 
 // Loop through the list and render pips
