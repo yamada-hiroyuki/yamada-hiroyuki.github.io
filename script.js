@@ -281,8 +281,24 @@ const captions = {
   107: "Looking down , crossing from Maryland into Pennsylvania.",
   111: "Looking back, leaving DelMarVa.",
   116: "Near Wilmington, DE.",
-  118: "Wilmington, DE",
+  118: "Wilmington, DE.",
+  120: "Wilmington, DE and Chester, PA.",
+  122: "Approaching Philadelphia, PA.",
+  123: "Philadelphia, PA, with Broad Street runinng distinctively up and to the right of the image.",
+  124: "Closer to Philadelphia, PA.",
+  125: "Philadelphia, PA.",
+  128: "Philadelphia, PA and Camden, NJ in the foreground.",
+  129: "Maybe Reading, PA in the distance?",
+  130: "Closer view of Reading, PA, from a distance of approximately 60 mi.",
+  131: "Burlington, NJ, featuring a swath of distribution centers in the foreground.",
+  132: "Trenton makes, the world takes! Trenton, NJ.",
+  133: "Trenton, NJ, featuring distribution centers all over.",
+  134: "Central New Jersey, showing just how lovely our highways and industrial regions can be.",
+  135: "Distribution makes the world go 'round, and the NY Tristate is no exception. Massive swath of DCs on the outskirts of NYC.",
+  136: "New Brunswick, NJ in the foreground, with Highland Park, Piscataway and Edison in the background.",
+  137: "Central Jersey -- New Brunswick NJ on the left, with Newark, NJ in the distance on the right.",
 };
+
 
 const processedFlightTrack = flightTrack.map((d) => ({
   lat: parseFloat(d.Latitude),
@@ -384,10 +400,6 @@ map.on("click", () => {
 });
 
 
-
-
-
-
 // Update the SVG on map interaction
 function updateSVG() {
   updateSVGBounds();
@@ -416,8 +428,6 @@ renderFlightTrack(processedFlightTrack);
 
 // List of integers for the pips to render
 const pipIndices = [1, 14, 21, 44, 77, 79, 80, 94, 97, 98, 101, 102, 103, 104, 107, 111, 116, 118];
-
-
 
 
 
