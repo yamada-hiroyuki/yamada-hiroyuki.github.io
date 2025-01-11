@@ -11,8 +11,8 @@
     }
     #map {
       position: relative;
-      width: 100vw;
-      height: 100vh;
+      width: 75vw;
+      height: 75vh;
       background: url('data/images/us.svg') no-repeat center center;
       background-size: cover;
       overflow: hidden;
@@ -25,10 +25,10 @@
       padding: 10px;
       border-radius: 5px;
       display: none;
-      width: 300px;
+      width: 450px;
     }
     .info-box img {
-      width: 100%;
+      width: 400px;
       border-radius: 5px;
     }
   </style>
@@ -36,7 +36,7 @@
 <body>
 
 <div id="map">
-  <svg id="flight-path" width="100%" height="100%" style="position: absolute; top: 0; left: 0;"></svg>
+  <svg id="flight-path" width="75%" height="75%" style="position: absolute; top: 0; left: 0;"></svg>
   <div class="info-box" id="info-box">
     <img id="info-image" src="" alt="">
     <p id="info-text"></p>
@@ -47,9 +47,9 @@
 <script>
   // Mock data for testing
   const flightTrack = [
-    { lat: 40.0, lon: -74.0, img: 'image1.jpg', text: 'View over New York.' },
-    { lat: 39.0, lon: -75.0, img: 'image2.jpg', text: 'Flying near Philadelphia.' },
-    { lat: 38.0, lon: -76.0, img: 'image3.jpg', text: 'Beautiful skies over Maryland.' }
+    { lat: 40, lon: -74.0, img: 'data/images/image1.jpg', text: 'View over New York.' },
+    { lat: 39.0, lon: -75.0, img: 'data/images/image2.jpg', text: 'Flying near Philadelphia.' },
+    { lat: 38.0, lon: -76.0, img: 'data/images/image3.jpg', text: 'Beautiful skies over Maryland.' }
   ];
 
   const svg = d3.select("#flight-path");
