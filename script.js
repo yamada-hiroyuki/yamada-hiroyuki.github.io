@@ -265,8 +265,10 @@ const flightTrack = [
 ];
 
 const captions = {
-  1: "caption 1",
-  21: "caption 21",
+  1: "CLT Airport - D / E gates",
+  14: "Greensboro, NC, from 23,000' altitude and ~20 mi distance, through a cell phone telephoto lens",
+  44: "Raleigh, NC, looking northwest torward Durham, NC",
+  77: "Richmond, VA, at approx 50x zoom from an altitude of 33,000'",
 };
 
 const processedFlightTrack = flightTrack.map((d) => ({
@@ -397,8 +399,9 @@ function updateSVG() {
 updateSVGBounds();
 renderFlightTrack(processedFlightTrack);
 renderInteractivePip(1, "/data/images/image1.jpg", 1);
-renderInteractivePip(21, "/data/images/image21.jpg", 21);
-
+renderInteractivePip(14, "/data/images/image14.jpg", 14);
+renderInteractivePip(44, "/data/images/image44.jpg", 44);
+renderInteractivePip(77, "/data/images/image77.jpg", 77);
 
 // Attach update event listeners to the map
 map.on("zoomend moveend", updateSVG);
