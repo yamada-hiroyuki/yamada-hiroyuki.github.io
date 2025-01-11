@@ -269,7 +269,7 @@ const captions = {
   14: "Greensboro, NC, from 23,000' altitude and ~20 mi distance, through a cell phone telephoto lens",
   44: "Raleigh, NC, looking northwest torward Durham, NC",
   77: "Richmond, VA, at approx 50x zoom from an altitude of 33,000'",
-  79: "Zoomed in shot of Richmond. Context pic a few seconds later.",
+  79: "Zoomed in shot of DC. Context pic a few seconds later.",
   80: "Zoomed out - 0.6x shot - showing context for the zoomed in pic a few seconds earlier.",
 };
 
@@ -401,8 +401,47 @@ function updateSVG() {
 updateSVGBounds();
 renderFlightTrack(processedFlightTrack);
 
+
+
+
+REMOVE CAPTIONS FormData
+
+const captions = {
+  1: "CLT Airport - D / E gates",
+  14: "Greensboro, NC, from 23,000' altitude and ~20 mi distance, through a cell phone telephoto lens",
+  44: "Raleigh, NC, looking northwest torward Durham, NC",
+  77: "Richmond, VA, at approx 50x zoom from an altitude of 33,000'",
+  79: "Zoomed in shot of DC. Context pic a few seconds later.",
+  80: "Zoomed out - 0.6x shot - showing context for the zoomed in pic a few seconds earlier.",
+  94: "Approaching the  the southern terminus of the Bos-Wash Megalopolis.",
+  97: "View of Washington, DC and Arlington, VA"
+  98: "Washington, DC blending into the greater DelMarVa"
+  101: "The megalopolis continues, with a view of Annapolis in the distance",
+  102: "Annapolis, MD"
+  103: "Annapolis, MD, with foreground context to capture the city's luminosity compared to the surrounding area.",
+  104: "Wide angle picture of Annapolis, MD, with foreground context to capture the city's luminosity compared to the surrounding area.",
+  107: "Looking down , crossing from Maryland into Pennsylvania."
+  111: "Looking back, leaving DelMarVa.",
+  116: "Near Wilmington, DE.",
+  118: "Wilmington, DE",
+   
+
+
+
+
+};
+
+
+
+
 // List of integers for the pips to render
-const pipIndices = [1, 14, 21, 44, 77, 79, 80];
+const pipIndices = [1, 14, 21, 44, 77, 79, 80, 94, 97, 98, 101, 102, 103, 104, 107, 111, 116, 118];
+
+
+
+
+
+
 
 // Loop through the list and render pips
 pipIndices.forEach((index) => {
