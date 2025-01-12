@@ -465,6 +465,59 @@ const pipIndices = [1, 14, 44, 77, 79, 80, 94, 97, 98, 101, 102, 103, 104, 107, 
 
 
 
+// Keep track of the currently active pip index
+let activePipIndex = null;
+
+// Function to activate a pip by index
+function activatePip(index) {
+  // Deactivate the currently active pip
+  if (activePipIndex !== null) {
+    const currentPipId = `#pip-${pipIndices[activePipIndex]}`;
+    d3.select(currentPipId).attr("r", 6).attr("fill", "dark-gray");
+  }
+
+  // Update the active pip index
+  activePipIndex = index;
+
+  // Activate the new pip
+  const pipId = `#pip-${pipIndices[activePipIndex]}`;
+  const pipData = processedFlightTrack[pipIndices[activePipIndex]];
+  const imagePath = `/data/images/image${pipIndices[activePipIndex]}.jpg`;
+  const caption = captions[pipIndices[activePipIndex]];
+
+  d3.select(pipId).attr("r", 8).attr("fill", "green");
+  showInfoPane(imagePath, caption, true);
+
+  // Pan the map to the pip location
+  const latLng = L.latLng(pipData.lat, pipData.lon);
+  map.setView(latLng, map.getZoom());
+}
+
+// Listen for arrow key events
+document.addEventListener("keydown", (event) => {
+  if (!pipIndices.length) return;
+
+  if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+    // Move to the next pip
+    if (activePipIndex === null) {
+      activatePip(0); // Start with the first pip if none is active
+    } else {
+      activatePip((activePipIndex + 1) % pipIndices.length);
+    }
+    event.preventDefault();
+  } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+    // Move to the previous pip
+    if (activePipIndex === null) {
+      activatePip(pipIndices.length - 1); // Start with the last pip if none is active
+    } else {
+      activatePip(
+        (activePipIndex - 1 + pipIndices.length) % pipIndices.length
+      );
+    }
+    event.preventDefault();
+  }
+});
+
 // Loop through the list and render pips
 pipIndices.forEach((index) => {
   renderInteractivePip(index, `/data/images/image${index}.jpg`, index);
