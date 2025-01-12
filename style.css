@@ -48,6 +48,11 @@ body {
     font-size: 18px; /* Adjust text size for readability */
   }
   
+  #info-image {
+    max-width: 100%; /* Ensure it doesn't overflow horizontally */
+    max-height: 70vh; /* Set a maximum height relative to the viewport height */
+    object-fit: contain; /* Preserve aspect ratio while fitting within bounds */
+  }
 
 /* Inlaid window styles */
 .inlaid-window {

@@ -504,20 +504,30 @@ function activatePip(index) {
 function activatePreviousPip() {
   if (activePipIndex > 0) {
       activatePipByIndex(activePipIndex - 1);
+      // Pan the map to the pip location
+      const zoomLevel = map.getZoom();
+      const shiftFactor = 3 / Math.pow(2, zoomLevel - map.getMinZoom()); // Adjust shift based on zoom
+      const latLng = L.latLng(pipData.lat, pipData.lon + shiftFactor);
+      map.setView(latLng, zoomLevel);
   }
 }
 
 function activateNextPip() {
   if (activePipIndex < pipIndices.length - 1) {
       activatePipByIndex(activePipIndex + 1);
+      
+
   }
 }
 
 
 function activatePipByIndex(index) {
   const pipData = processedFlightTrack[pipIndices[index]];
-  const latLng = L.latLng(pipData.lat, pipData.lon);
-  map.setView(latLng, map.getZoom());
+  // Pan the map to the pip location
+  const zoomLevel = map.getZoom();
+  const shiftFactor = 3 / Math.pow(2, zoomLevel - map.getMinZoom()); // Adjust shift based on zoom
+  const latLng = L.latLng(pipData.lat, pipData.lon + shiftFactor);
+  map.setView(latLng, zoomLevel);
 
   if (activePip) {
       d3.select(activePip).attr("r", 6).attr("fill", "dark-gray");
