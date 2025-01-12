@@ -551,5 +551,62 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+let startX = 0; // Store the starting X position of the touch
+let isSwipe = false;
+
+const mapContainer = document.getElementById("map"); // Your map container
+const hammer = new Hammer(mapContainer); 
+mapContainer.addEventListener("touchstart", (event) => {
+  if (event.touches.length === 1) {
+    startX = event.touches[0].clientX; // Record the starting X position
+    isSwipe = true; // Flag to indicate swipe is possible
+  }
+});
+
+mapContainer.addEventListener("touchmove", (event) => {
+  if (isSwipe && event.touches.length === 1) {
+    const deltaX = event.touches[0].clientX - startX;
+
+    // Cancel swipe if the movement is too vertical
+    if (Math.abs(deltaX) < 20) return;
+
+    if (Math.abs(deltaX) > 50) { // Minimum distance for a swipe
+      if (deltaX > 0) {
+        activatePreviousPip(); // Swipe right
+      } else {
+        activateNextPip(); // Swipe left
+      }
+      isSwipe = false; // Prevent multiple swipes in one gesture
+    }
+  }
+});
+
+mapContainer.addEventListener("touchend", () => {
+  isSwipe = false; // Reset swipe flag
+});
+
+// Example activation functions
+function activateNextPip() {
+  const nextIndex = (activePipIndex + 1) % pipIndices.length; // Loop to the start
+  setActivePip(nextIndex);
+}
+
+function activatePreviousPip() {
+  const prevIndex = (activePipIndex - 1 + pipIndices.length) % pipIndices.length; // Loop to the end
+  setActivePip(prevIndex);
+}
+
+// Set the active pip (show info pane and move map)
+function setActivePip(index) {
+  activePipIndex = index;
+  const pipData = processedFlightTrack[pipIndices[activePipIndex]];
+  const latLng = L.latLng(pipData.lat, pipData.lon);
+  map.setView(latLng, map.getZoom());
+  showInfoPane(`/data/images/image${pipIndices[activePipIndex]}.jpg`, captions[pipIndices[activePipIndex]]);
+}
+
+hammer.on("swipeleft", () => activateNextPip()); // Swipe left for the next pip
+hammer.on("swiperight", () => activatePreviousPip()); // Swipe right for the previous pip
+
 // Attach update event listeners to the map
 map.on("zoomend moveend", updateSVG);
