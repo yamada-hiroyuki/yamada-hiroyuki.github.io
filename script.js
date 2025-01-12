@@ -269,7 +269,7 @@ const captions = {
   14: "Greensboro, NC, from 23,000' altitude and ~20 mi distance, through a cell phone telephoto lens",
   44: "Raleigh, NC, looking northwest torward Durham, NC",
   77: "Richmond, VA, at approx 50x zoom from an altitude of 33,000'",
-  79: "Zoomed in shot of DC. Context pic a few seconds later.",
+  79: "Zoomed in shot of Richmond, VA. Context pic a few seconds later.",
   80: "Context picture at 0.6x zoom for the picture a few seconds earlier.",
   94: "Approaching the  the southern terminus of the Bos-Wash Megalopolis.",
   97: "View of Washington, DC and Arlington, VA",
