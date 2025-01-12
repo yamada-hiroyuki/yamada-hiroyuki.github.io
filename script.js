@@ -556,10 +556,8 @@ const mapContainer = document.getElementById("map"); // Your map container
 
 let startX = 0; // Store the starting X position of the touch
 let isSwipe = false;
-const hammer = new Hammer(infoImage);
-
 const infoImage = document.getElementById("info-image");
-
+const hammer = new Hammer(infoImage);
 infoImage.addEventListener("touchstart", (event) => {
   if (event.touches.length === 1) {
     startX = event.touches[0].clientX; // Record the starting X position
@@ -590,25 +588,47 @@ infoImage.addEventListener("touchend", () => {
 });
 
 
-// Example activation functions
+// activation functions
+let currentIndex = pipIndices.indexOf(activePipIndex);
+
 function activateNextPip() {
-  const nextIndex = (activePipIndex + 1) % pipIndices.length; // Loop to the start
-  setActivePip(nextIndex);
+  if (currentIndex < pipIndices.length - 1) {
+    currentIndex++;
+    const nextIndex = pipIndices[currentIndex];
+    activePipIndex = nextIndex; // Update the global active pip index
+    setActivePip(nextIndex);   // Update map and info pane
+  }
 }
 
 function activatePreviousPip() {
-  const prevIndex = (activePipIndex - 1 + pipIndices.length) % pipIndices.length; // Loop to the end
-  setActivePip(prevIndex);
+  if (currentIndex > 0) {
+    currentIndex--;
+    const prevIndex = pipIndices[currentIndex];
+    activePipIndex = prevIndex; // Update the global active pip index
+    setActivePip(prevIndex);   // Update map and info pane
+  }
 }
-
 // Set the active pip (show info pane and move map)
 function setActivePip(index) {
-  activePipIndex = index;
-  const pipData = processedFlightTrack[pipIndices[activePipIndex]];
+  const pipData = processedFlightTrack[index];
   const latLng = L.latLng(pipData.lat, pipData.lon);
+
+  // Center the map on the new pip
   map.setView(latLng, map.getZoom());
-  showInfoPane(`/data/images/image${pipIndices[activePipIndex]}.jpg`, captions[pipIndices[activePipIndex]]);
+
+  // Update the active pip's style
+  if (activePip) {
+    d3.select(activePip).attr("r", 6).attr("fill", "dark-gray"); // Reset previous pip
+  }
+
+  activePip = d3.select(`#pip-${index}`).node();
+  d3.select(activePip).attr("r", 8).attr("fill", "green"); // Highlight new pip
+
+  // Update the info pane
+  const imagePath = `/data/images/image${index}.jpg`;
+  showInfoPane(imagePath, captions[index], true);
 }
+
 
 hammer.on("swipeleft", () => activateNextPip()); // Swipe left for the next pip
 hammer.on("swiperight", () => activatePreviousPip()); // Swipe right for the previous pip
