@@ -22,26 +22,26 @@ body {
     z-index: 10; /* Ensure flight track SVG is above other layers */
   }
   #info-box {
-    position: fixed; /* Keeps the info box anchored to the viewport */
+    position: fixed; /* Keeps the info pane anchored to the viewport */
     top: 10%; /* Adjust for better visibility */
-    right: 10%; /* Adjust for alignment */
+    right: 10%;
     background-color: rgba(30, 30, 30, 0.9); /* Ensure the background is opaque enough */
     color: white;
     border: 1px solid lime;
     border-radius: 5px;
     padding: 10px;
-    width: 768px; /* Set width as a percentage of viewport width */
-    max-width: 90vw; /* Ensure it doesn't get too wide */
-    height: auto; /* Adjust dynamically */
+    max-width: 75vw;
+    /* width: 768px;  */
+    max-height: 80vh; 
+    height: auto;
     display: none; /* Hidden by default */
     z-index: 1000; /* Ensure it appears on top of the map */
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.7); /* Optional: adds a shadow */
-    overflow: hidden; /* Prevents image overflow */
-    text-align: center; /* Ensures text and image are horizontally centered */
   }
   
   #info-box img {
-    max-width: 80vw
+    max-width: 75vw;
+    max-height: 70vh;
     border-radius: 5px;
     margin-bottom: 10px;
   }
@@ -51,17 +51,6 @@ body {
     font-size: 18px; /* Adjust text size for readability */
   }
   
-  #info-image {
-    max-width: 90vw; /* Limit width to 90% of the viewport width */
-    max-height: 70vh; /* Limit height to 70% of the viewport height */
-    width: auto; /* Maintain aspect ratio */
-    height: auto; /* Maintain aspect ratio */
-    object-fit: contain; /* Ensure the image doesn't get cropped */
-    display: inline-block; /* Ensure it is treated like text for alignment */
-    margin: 0 auto; /* Center the image horizontally */
-    vertical-align: middle; /* Align the image vertically with text (if any) */
-    }
-  }
 
 /* Inlaid window styles */
 .inlaid-window {
@@ -114,18 +103,13 @@ body {
 
 
 
-
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .inlaid-content {
     padding: 15px; /* Reduce padding on smaller screens */
     font-size: 14px; /* Smaller text for mobile */
   }
-  #info-image {
-    max-width: 80vw; /* Reduce the width slightly for smaller devices */
-    max-height: 60vh; /* Reduce height to avoid cutting off content */
-  }
+
   #close-message-btn {
     font-size: 13px; /* Adjust button text size */
     padding: 8px 16px; /* Smaller button */
@@ -137,12 +121,10 @@ body {
     font-size: 12px; /* Smaller text for very small screens */
     border-radius: 5px; /* Smaller border radius */
   }
-  #info-image {
-    max-width: 75vw;
-    max-height: 50vh;
-  }
+
   #close-message-btn {
     font-size: 12px; /* Further reduce button text size */
   }
 }
+
   
