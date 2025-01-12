@@ -551,19 +551,23 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-let startX = 0; // Store the starting X position of the touch
-let isSwipe = false;
 
 const mapContainer = document.getElementById("map"); // Your map container
-const hammer = new Hammer(mapContainer); 
-mapContainer.addEventListener("touchstart", (event) => {
+
+let startX = 0; // Store the starting X position of the touch
+let isSwipe = false;
+const hammer = new Hammer(infoImage);
+
+const infoImage = document.getElementById("info-image");
+
+infoImage.addEventListener("touchstart", (event) => {
   if (event.touches.length === 1) {
     startX = event.touches[0].clientX; // Record the starting X position
     isSwipe = true; // Flag to indicate swipe is possible
   }
 });
 
-mapContainer.addEventListener("touchmove", (event) => {
+infoImage.addEventListener("touchmove", (event) => {
   if (isSwipe && event.touches.length === 1) {
     const deltaX = event.touches[0].clientX - startX;
 
@@ -581,9 +585,10 @@ mapContainer.addEventListener("touchmove", (event) => {
   }
 });
 
-mapContainer.addEventListener("touchend", () => {
+infoImage.addEventListener("touchend", () => {
   isSwipe = false; // Reset swipe flag
 });
+
 
 // Example activation functions
 function activateNextPip() {
