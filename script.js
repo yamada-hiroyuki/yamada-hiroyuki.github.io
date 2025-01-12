@@ -414,8 +414,10 @@ function renderInteractivePip(index, imagePath, captionKey) {
       d3.select(this).attr("r", 9).attr("fill", "green");
       showInfoPane(imagePath, captions[captionKey], true);
       // Pan the map to the pip location
-      const latLng = L.latLng(pipData.lat, pipData.lon+3);
-      map.setView(latLng, map.getZoom());
+      const zoomLevel = map.getZoom();
+      const shiftFactor = 3 / Math.pow(2, zoomLevel - map.getMinZoom()); // Adjust shift based on zoom
+      const latLng = L.latLng(pipData.lat, pipData.lon + shiftFactor);
+      map.setView(latLng, zoomLevel);
     });
 }
 
@@ -490,8 +492,12 @@ function activatePip(index) {
   showInfoPane(imagePath, caption, true);
 
   // Pan the map to the pip location
-  const latLng = L.latLng(pipData.lat, pipData.lon+3);
-  map.setView(latLng, map.getZoom());
+  const zoomLevel = map.getZoom();
+  const shiftFactor = 3 / Math.pow(2, zoomLevel - map.getMinZoom()); // Adjust shift based on zoom
+  const latLng = L.latLng(pipData.lat, pipData.lon + shiftFactor);
+  map.setView(latLng, zoomLevel);
+
+  
 }
 
 // Listen for arrow key events
