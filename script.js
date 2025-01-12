@@ -7,6 +7,7 @@ L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
   attribution: '© OpenStreetMap contributors, Humanitarian OpenStreetMap Team',
 }).addTo(map);
 
+let currentIndex = 0;
 // Create an SVG layer within Leaflet's overlay pane
 const svgOverlay = d3.select(map.getPanes().overlayPane).append("svg");
 const g = svgOverlay.append("g").attr("class", "leaflet-zoom-hide");
@@ -414,8 +415,10 @@ function renderInteractivePip(index, imagePath, captionKey) {
       d3.select(this).attr("r", 10).attr("fill", "lime");
       showInfoPane(imagePath, captions[captionKey], true);
       // Pan the map to the pip location
-      const latLng = L.latLng(pipData.lat, pipData.lon+3);
-      map.setView(latLng, map.getZoom());
+      const zoomLevel = map.getZoom();
+      const shiftFactor = 3 / Math.pow(2, zoomLevel - map.getMinZoom()); // Adjust shift based on zoom
+      const latLng = L.latLng(pipData.lat, pipData.lon + shiftFactor);
+      map.setView(latLng, zoomLevel);
     });
 }
 
@@ -428,8 +431,10 @@ map.on("click", () => {
     infoBox.style.display = "none"; // Hide the info pane
     activePip = null; // Reset the active pip tracker
     // Pan the map to the pip location
-    //const latLng = L.latLng(pipData.lat, pipData.lon+3);
-    //map.setView(latLng, map.getZoom());
+    const zoomLevel = map.getZoom();
+    const shiftFactor = 3 / Math.pow(2, zoomLevel - map.getMinZoom()); // Adjust shift based on zoom
+    const latLng = L.latLng(pipData.lat, pipData.lon + shiftFactor);
+    map.setView(latLng, zoomLevel);
   }
 
 });
@@ -490,8 +495,10 @@ function activatePip(index) {
   showInfoPane(imagePath, caption, true);
 
   // Pan the map to the pip location
-  const latLng = L.latLng(pipData.lat, pipData.lon+3);
-  map.setView(latLng, map.getZoom());
+  const zoomLevel = map.getZoom();
+  const shiftFactor = 3 / Math.pow(2, zoomLevel - map.getMinZoom()); // Adjust shift based on zoom
+  const latLng = L.latLng(pipData.lat, pipData.lon + shiftFactor);
+  map.setView(latLng, zoomLevel);
 }
 
 // Listen for arrow key events
@@ -518,6 +525,61 @@ document.addEventListener("keydown", (event) => {
     event.preventDefault();
   }
 });
+
+
+const infoImage = document.getElementById("info-image");
+
+// Add event listener for tap actions
+infoImage.addEventListener("click", (event) => {
+  const rect = infoImage.getBoundingClientRect(); // Get the dimensions of the image
+  const clickX = event.clientX - rect.left; // X-coordinate of the click relative to the image
+  const width = rect.width;
+
+  if (clickX < width / 3) {
+    // Left third: Go to previous pip
+    activatePreviousPip();
+  } else if (clickX > (2 * width) / 3) {
+    // Right third: Go to next pip
+    activateNextPip();
+  } else {
+    // Middle third: Optional behavior (e.g., no action or show/hide details)
+    console.log("Tapped on the middle third");
+  }
+});
+
+function setActivePip(index) {
+  const pipData = processedFlightTrack[index];
+  // Center the map on the new pip
+  const zoomLevel = map.getZoom();
+  const shiftFactor = 3 / Math.pow(2, zoomLevel - map.getMinZoom()); // Adjust shift based on zoom
+  const latLng = L.latLng(pipData.lat, pipData.lon + shiftFactor);
+  map.setView(latLng, zoomLevel);
+
+  // Update the active pip's style
+  if (activePip) {
+    d3.select(activePip).attr("r", 6).attr("fill", "dark-gray"); // Reset previous pip
+  }
+
+  activePip = d3.select(`#pip-${index}`).node();
+  d3.select(activePip).attr("r", 8).attr("fill", "lime"); // Highlight new pip
+
+  // Update the info pane
+  const imagePath = `/data/images/image${index}.jpg`;
+  showInfoPane(imagePath, captions[index], true);
+}
+
+// Ensure active pip updates when switching
+function activateNextPip() {
+  currentIndex = (currentIndex + 1) % pipIndices.length; // Loop to the first pip
+  const nextIndex = pipIndices[currentIndex];
+  setActivePip(nextIndex);
+}
+
+function activatePreviousPip() {
+  currentIndex = (currentIndex - 1 + pipIndices.length) % pipIndices.length; // Loop to the last pip
+  const prevIndex = pipIndices[currentIndex];
+  setActivePip(prevIndex);
+}
 
 // Loop through the list and render pips
 pipIndices.forEach((index) => {
