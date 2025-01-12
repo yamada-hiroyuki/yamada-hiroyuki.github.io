@@ -427,7 +427,11 @@ map.on("click", () => {
     const infoBox = document.getElementById("info-box");
     infoBox.style.display = "none"; // Hide the info pane
     activePip = null; // Reset the active pip tracker
+    // Pan the map to the pip location
+    const latLng = L.latLng(pipData.lat, pipData.lon+3);
+    map.setView(latLng, map.getZoom());
   }
+
 });
 
 
