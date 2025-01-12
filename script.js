@@ -270,7 +270,7 @@ const captions = {
   44: "Raleigh, NC, looking northwest torward Durham, NC",
   77: "Richmond, VA, at approx 50x zoom from an altitude of 33,000'",
   79: "Zoomed in shot of DC. Context pic a few seconds later.",
-  80: "Zoomed out - 0.6x shot - showing context for the zoomed in pic a few seconds earlier.",
+  80: "Context picture at 0.6x zoom for the picture a few seconds earlier.",
   94: "Approaching the  the southern terminus of the Bos-Wash Megalopolis.",
   97: "View of Washington, DC and Arlington, VA",
   98: "Washington, DC blending into the greater DelMarVa",
@@ -297,7 +297,41 @@ const captions = {
   135: "Distribution makes the world go 'round, and the NY Tristate is no exception. Massive swath of DCs on the outskirts of NYC.",
   136: "New Brunswick, NJ in the foreground, with Highland Park, Piscataway and Edison in the background.",
   137: "Central Jersey -- New Brunswick NJ on the left, with Newark, NJ in the distance on the right.",
+  140: "View of Newark, NJ and the beginning of the New York City Metropolis.",
+  142: "New Jersey and New York. Taken at 0.6x zoom, so the luminosity appears lower than in real life.",
+  143: "View of New Jersey and New York City.",
+  144: "Brooklyn in the foreground, with Manhattan and New Jersey in the background.",
+  145: "Manhattan and downtown Brooklyn, NYC.",
+  146: "Wide angle of New Jersey, Manhattan and Brooklyn.",
+  147: "View of New York City from the east.",
+  148: "North of New York City. The blue bridge in the background is the Tappan Zee.",
+  149: "Sands Point and Glen Cove, NY in the foreground. New Rochelle, Mamoroneck, Rye, Chester, NY, all the way to Stamford, CT on the right.",
+  150: "Chester, NY and Stamford, CT in the midground, with the Tappan Zee bridge (blue) just barely visible in the back left of the image.",
+  151: "Closeup of Stamford, CT.",
+  152: "Stamford and Norwalk, CT.",
+  153: "Closeup of Norwalk, CT, with Danbury, CT in the background.",
+  155: "Bridgeport, CT, with Danbury, CT in the back left of the image.",
+  157: "Looking back at Bridgeport, CT in the foreground and Danbury, CT in the background.",
+  158: "Looking forward to New Haven, CT, with Waterbury and Hartford, CT visible in the background.",
+  159: "New Haven, CT, with a touch of cloud cover.",
+  160: "Wide angle shot of New Haven, CT under light clouds. Waterbury and Hartford, CT visible in the background.",
+  161: "Downtown New Haven, CT with Waterbury, CT just visible at the top of the image.",
+  162: "Hartford, CT and Springfield, MA in the distance.",
+  163: "A distant view of Hartford, CT and Springfield, MA.",
+  170: "Distant view of Providence, RI and Boston, MA.",
+  176: "Distant view of Boston, MA. Large distribution cewnter visible in the foreground.",
+  178: "Looking down in suburban MA, showing the stark contrast between light pollution near cities and outside of them.",
+  182: "Providence, RI.",
+  183: "Providence, RI.",
+  184: "Providence, RI.",
+  185: "Distant view of Boston, MA.",
+  187: "Telephoto view of Boston, MA.",
+  198: "Brockton, MA, on approach to Boston Logan.",
+  199: "Wide angle of Brockton, MA, on approach to Boston Logan.",
+  200: "Coming in to Boston, MA, on approach to BOS Runway 27.",
+  227: "Landing on Runway 27 at Boston Logan, with the Boston skyline visible in the background.",
 };
+
 
 
 const processedFlightTrack = flightTrack.map((d) => ({
@@ -427,67 +461,7 @@ renderFlightTrack(processedFlightTrack);
 
 
 // List of integers for the pips to render
-const pipIndices = [1, 14, 21, 44, 77, 79, 80, 94, 97, 98, 101, 102, 103, 104, 107, 111, 116, 118, 120, 122, 123, 124, 125, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137];
-
-
-
-
-
-
-
-
-
-
-
-const captions = {
-  1: "CLT Airport - D / E gates",
-  14: "Greensboro, NC, from 23,000' altitude and ~20 mi distance, through a cell phone telephoto lens",
-  44: "Raleigh, NC, looking northwest torward Durham, NC",
-  77: "Richmond, VA, at approx 50x zoom from an altitude of 33,000'",
-  79: "Zoomed in shot of DC. Context pic a few seconds later.",
-  80: "Zoomed out - 0.6x shot - showing context for the zoomed in pic a few seconds earlier.",
-  94: "Approaching the  the southern terminus of the Bos-Wash Megalopolis.",
-  97: "View of Washington, DC and Arlington, VA",
-  98: "Washington, DC blending into the greater DelMarVa",
-  101: "The megalopolis continues, with a view of Annapolis in the distance",
-  102: "Annapolis, MD",
-  103: "Annapolis, MD, with foreground context to capture the city's luminosity compared to the surrounding area.",
-  104: "Wide angle picture of Annapolis, MD, with foreground context to capture the city's luminosity compared to the surrounding area.",
-  107: "Looking down , crossing from Maryland into Pennsylvania.",
-  111: "Looking back, leaving DelMarVa.",
-  116: "Near Wilmington, DE.",
-  118: "Wilmington, DE.",
-  120: "Wilmington, DE and Chester, PA.",
-  122: "Approaching Philadelphia, PA.",
-  123: "Philadelphia, PA, with Broad Street runinng distinctively up and to the right of the image.",
-  124: "Closer to Philadelphia, PA.",
-  125: "Philadelphia, PA.",
-  128: "Philadelphia, PA and Camden, NJ in the foreground.",
-  129: "Maybe Reading, PA in the distance?",
-  130: "Closer view of Reading, PA, from a distance of approximately 60 mi.",
-  131: "Burlington, NJ, featuring a swath of distribution centers in the foreground.",
-  132: "Trenton makes, the world takes! Trenton, NJ.",
-  133: "Trenton, NJ, featuring distribution centers all over.",
-  134: "Central New Jersey, showing just how lovely our highways and industrial regions can be.",
-  135: "Distribution makes the world go 'round, and the NY Tristate is no exception. Massive swath of DCs on the outskirts of NYC.",
-  136: "New Brunswick, NJ in the foreground, with Highland Park, Piscataway and Edison in the background.",
-  137: "Central Jersey -- New Brunswick NJ on the left, with Newark, NJ in the distance on the right.",
-  140: "View of Newark, NJ and the beginning of the New York City Metropolis.",
-  142: "New Jersey and New York. Taken at 0.6x zoom, so the luminosity appears lower than in real life.",
-  143: "View of New Jersey and New York City.",
-  144: "Brooklyn in the foreground, with Manhattan and New Jersey in the background.",
-  145: "Manhattan and downtown Brooklyn, NYC.",
-  146: "Wide angle of New Jersey, Manhattan and Brooklyn.",
-  147: "View of New York City from the east.",
-  148: "North of New York City. The blue bridge in the background is the Tappan Zee.",
-  149:
-
-
-
-
-  
-  
-};
+const pipIndices = [1, 14, 44, 77, 79, 80, 94, 97, 98, 101, 102, 103, 104, 107, 111, 116, 118, 120, 122, 123, 124, 125, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 140, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 155, 157, 158, 159, 160, 161, 162, 163, 170, 176, 178, 182, 183, 184, 185, 187, 198, 199, 200, 227,];
 
 
 
