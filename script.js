@@ -374,52 +374,45 @@ function showInfoPane(imageSrc, caption, persistent = false) {
 }
 let activePip = null; // Tracks the currently active (persistent) pip
 
-function renderInteractivePip(index, imagePath, captionKey) {
+// Pip objects
+function renderInteractivePip(index, imagePath, captionKey, buttonText = null, buttonAction = null) {
   const pipData = processedFlightTrack[index];
   const [x, y] = projectPoint(pipData.lat, pipData.lon);
 
-  // Append the pip and give it a unique ID
   const circle = g.append("circle")
     .attr("id", `pip-${index}`)
     .attr("cx", x)
     .attr("cy", y)
     .attr("r", 6)
-    .attr("fill", "dark-re")
+    .attr("fill", "dark-grey")
     .attr("stroke", "white")
     .attr("stroke-width", 2)
     .on("mouseover", function () {
       if (activePip !== this) {
-        d3.select(this).attr("r", 8).attr("fill", "green"); // Highlight on hover
-        showInfoPane(imagePath, captions[captionKey]);
+        d3.select(this).attr("r", 8).attr("fill", "green");
+        showInfoPane(imagePath, captions[captionKey], false, buttonText, buttonAction);
       }
     })
     .on("mouseout", function () {
       if (activePip !== this) {
-        d3.select(this).attr("r", 6).attr("fill", "dark-grey"); // Reset pip styling
+        d3.select(this).attr("r", 6).attr("fill", "dark-grey");
         const infoBox = document.getElementById("info-box");
-        infoBox.style.display = "none"; // Hide info pane
+        infoBox.style.display = "none";
       }
     })
     .on("click", function (event) {
-      event.stopPropagation(); // Prevent bubbling to hide the pane
+      event.stopPropagation();
 
-      if (activePip === this) {
-        // If this pip is already active, reset it
-        activePip = null;
-        d3.select(this).attr("r", 6).attr("fill", "dark-gray");
-        const infoBox = document.getElementById("info-box");
-        infoBox.style.display = "none"; // Hide the info pane
-      } else {
-        // Deactivate any previously active pip
-        if (activePip) {
-          d3.select(activePip).attr("r", 6).attr("fill", "dark-gray");
-        }
-
-        // Activate the current pip
-        activePip = this;
-        d3.select(this).attr("r", 8).attr("fill", "green");
-        showInfoPane(imagePath, captions[captionKey], true);
+      // Deactivate any previously active pip
+      if (activePip) {
+        d3.select(activePip).attr("r", 6).attr("fill", "dark-grey");
       }
+
+      // Set this pip as the active pip
+      activePip = this;
+      activePipIndex = index; // Update the active pip index for arrow navigation
+      d3.select(this).attr("r", 8).attr("fill", "green");
+      showInfoPane(imagePath, captions[captionKey], true, buttonText, buttonAction);
     });
 }
 
@@ -495,26 +488,34 @@ function activatePip(index) {
 
 // Listen for arrow key events
 document.addEventListener("keydown", (event) => {
-  if (!pipIndices.length) return;
+  if (pipIndices.length === 0 || activePipIndex === null) return;
 
-  if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+  const currentIndex = pipIndices.indexOf(activePipIndex);
+
+  let nextIndex;
+  if (event.key === "ArrowRight") {
     // Move to the next pip
-    if (activePipIndex === null) {
-      activatePip(0); // Start with the first pip if none is active
-    } else {
-      activatePip((activePipIndex + 1) % pipIndices.length);
-    }
-    event.preventDefault();
-  } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+    nextIndex = (currentIndex + 1) % pipIndices.length;
+  } else if (event.key === "ArrowLeft") {
     // Move to the previous pip
-    if (activePipIndex === null) {
-      activatePip(pipIndices.length - 1); // Start with the last pip if none is active
-    } else {
-      activatePip(
-        (activePipIndex - 1 + pipIndices.length) % pipIndices.length
-      );
-    }
-    event.preventDefault();
+    nextIndex = (currentIndex - 1 + pipIndices.length) % pipIndices.length;
+  } else {
+    return; // Ignore other keys
+  }
+
+  const currentPipIndex = activePipIndex;
+  const nextPipIndex = pipIndices[nextIndex];
+
+  // De-emphasize the currently active pip
+  const currentPip = document.querySelector(`#pip-${currentPipIndex}`);
+  if (currentPip) {
+    d3.select(currentPip).attr("r", 6).attr("fill", "dark-grey");
+  }
+
+  // Emphasize the next pip and set it as the active pip
+  const nextPip = document.querySelector(`#pip-${nextPipIndex}`);
+  if (nextPip) {
+    nextPip.dispatchEvent(new Event("click")); // Simulate a click on the next pip
   }
 });
 
