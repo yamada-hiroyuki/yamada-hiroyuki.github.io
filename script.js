@@ -2,6 +2,10 @@
 const map = L.map("map", { maxZoom: 11 }).setView([38.8945,-77.0104], 
   7);
 
+// Detect if it's a mobile device
+const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+
 L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
   maxZoom: 11,
   minZoom: 7,
@@ -377,6 +381,7 @@ let activePip = null; // Tracks the currently active (persistent) pip
 
 
 
+// Modify the pip click behavior
 function renderInteractivePip(index, imagePath, captionKey) {
   const pipData = processedFlightTrack[index];
   const [x, y] = projectPoint(pipData.lat, pipData.lon);
@@ -391,39 +396,60 @@ function renderInteractivePip(index, imagePath, captionKey) {
     .attr("stroke", "white")
     .attr("stroke-width", 2)
     .on("mouseover", function () {
-      if (activePip !== this) {
-        d3.select(this).attr("r", 9).attr("fill", "green"); // Highlight on hover
+      if (activePip !== this && !isMobile) {
+        d3.select(this).attr("r", 8).attr("fill", "green"); // Highlight on hover
         showInfoPane(imagePath, captions[captionKey]);
       }
     })
     .on("mouseout", function () {
-      if (activePip !== this) {
+      if (activePip !== this && !isMobile) {
         d3.select(this).attr("r", 6).attr("fill", "dark-gray"); // Reset pip styling
         const infoBox = document.getElementById("info-box");
         infoBox.style.display = "none"; // Hide info pane
       }
     })
-    .on("click", function (event) {
+    .on("click touchstart", function (event) {
+      event.preventDefault(); // Prevent default touch behavior
       event.stopPropagation(); // Prevent bubbling to hide the pane
 
-      // Deactivate any previously active pip
-      if (activePip) {
-        d3.select(activePip).attr("r", 6).attr("fill", "dark-gray");
-      }
+      const latLng = L.latLng(pipData.lat, pipData.lon);
+      const adjustedLatLng = isMobile
+        ? latLng
+        : L.latLng(pipData.lat, pipData.lon + 3 / map.getZoom()); // Offset for desktop
 
-      // Set this pip as active
-      activePip = this;
-      activePipIndex = pipIndices.indexOf(index); // Set active pip index
-      d3.select(this).attr("r", 9).attr("fill", "green");
-      showInfoPane(imagePath, captions[captionKey], true);
-      // Pan the map to the pip location
-      const zoomLevel = map.getZoom();
-      const shiftFactor = 3 / Math.pow(2, zoomLevel - map.getMinZoom()); // Adjust shift based on zoom
-      const latLng = L.latLng(pipData.lat, pipData.lon + shiftFactor);
-      map.setView(latLng, zoomLevel);
+      map.setView(adjustedLatLng, map.getZoom());
+
+      if (activePip === this) {
+        // If this pip is already active, reset it
+        activePip = null;
+        d3.select(this).attr("r", 6).attr("fill", "dark-gray");
+        const infoBox = document.getElementById("info-box");
+        infoBox.style.display = "none"; // Hide the info pane
+      } else {
+        // Deactivate any previously active pip
+        if (activePip) {
+          d3.select(activePip).attr("r", 6).attr("fill", "dark-gray");
+        }
+
+        // Activate the current pip
+        activePip = this;
+        d3.select(this).attr("r", 8).attr("fill", "green");
+
+        // Show the info pane
+        if (isMobile) {
+          // Adjust info box position for mobile
+          const infoBox = document.getElementById("info-box");
+          infoBox.style.position = "absolute";
+          infoBox.style.left = `${x - infoBox.offsetWidth / 2}px`;
+          infoBox.style.top = `${y - infoBox.offsetHeight - 10}px`; // Place above pip
+          infoBox.style.display = "block";
+          showInfoPane(imagePath, captions[captionKey], true);
+        } else {
+          showInfoPane(imagePath, captions[captionKey], true);
+        }
+      }
     });
 }
-
 
 // Handle clicks elsewhere on the map to hide the active pip
 map.on("click", () => {
@@ -459,16 +485,28 @@ function updateSVG() {
   });
 }
 
+function resetMapView(pipData) {
+  const isMobile = window.innerWidth <= 768; // Detect if the device is mobile
+  const zoomLevel = map.getZoom();
+  if (isMobile) {
+    // Mobile behavior
+    const shiftFactor = 3 / Math.pow(2, zoomLevel - map.getMinZoom()); // Adjust shift based on zoom
+    const latLng = L.latLng(pipData.lat, pipData.lon + shiftFactor);
+    map.setView(latLng, zoomLevel);
+  } else {
+    // Desktop behavior
+    const shiftFactor = 3 / Math.pow(2, zoomLevel - map.getMinZoom()); // Adjust shift based on zoom
+    const latLng = L.latLng(pipData.lat + shiftFactor, pipData.lon);
+    map.setView(latLng, zoomLevel);
+  }
+}
 
 // Initial render
 updateSVGBounds();
 renderFlightTrack(processedFlightTrack);
 
-
-
 // List of integers for the pips to render
 const pipIndices = [1, 14, 44, 77, 79, 80, 94, 97, 98, 101, 102, 103, 104, 107, 111, 116, 118, 120, 122, 123, 124, 125, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 140, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 155, 157, 158, 159, 160, 161, 162, 163, 170, 176, 178, 182, 183, 184, 185, 187, 198, 199, 200, 227,];
-
 
 
 // Keep track of the currently active pip index
@@ -494,11 +532,13 @@ function activatePip(index) {
   d3.select(pipId).attr("r", 9).attr("fill", "green");
   showInfoPane(imagePath, caption, true);
 
-  // Pan the map to the pip location
-  const zoomLevel = map.getZoom();
-  const shiftFactor = 3 / Math.pow(2, zoomLevel - map.getMinZoom()); // Adjust shift based on zoom
-  const latLng = L.latLng(pipData.lat, pipData.lon + shiftFactor);
-  map.setView(latLng, zoomLevel);
+  resetMapView(pipData);
+
+  // // Pan the map to the pip location
+  // const zoomLevel = map.getZoom();
+  //   const shiftFactor = 3 / Math.pow(2, zoomLevel - map.getMinZoom()); // Adjust shift based on zoom
+  // const latLng = L.latLng(pipData.lat, pipData.lon + shiftFactor);
+  // map.setView(latLng, zoomLevel);
 
   
 }
@@ -506,11 +546,14 @@ function activatePreviousPip() {
   if (activePipIndex > 0) {
       activatePipByIndex(activePipIndex - 1);
       // Pan the map to the pip location
-      const zoomLevel = map.getZoom();
-      const shiftFactor = 3 / Math.pow(2, zoomLevel - map.getMinZoom()); // Adjust shift based on zoom
-      const latLng = L.latLng(pipData.lat, pipData.lon + shiftFactor);
-      map.setView(latLng, zoomLevel);
-  }
+
+      resetMapView(processedFlightTrack[pipIndices[activePipIndex]]);
+      //     const zoomLevel = map.getZoom();
+  //     const shiftFactor = 3 / Math.pow(2, zoomLevel - map.getMinZoom()); // Adjust shift based on zoom
+  //     const latLng = L.latLng(pipData.lat, pipData.lon + shiftFactor);
+  //     map.setView(latLng, zoomLevel);
+  // }
+}
 }
 
 function activateNextPip() {
@@ -631,6 +674,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+function adjustImageSize() {
+  const infoImage = document.getElementById("info-image");
+  if (window.innerWidth > window.innerHeight) {
+    // Landscape mode
+    infoImage.style.maxHeight = "50vh";
+  } else {
+    // Portrait mode
+    infoImage.style.maxHeight = "70vh";
+  }
+}
+
+// Attach the event listener to window resize
+window.addEventListener("resize", adjustImageSize);
+
+// Call the function initially to set the correct size
+adjustImageSize();
 
 // Attach update event listeners to the map
 map.on("zoomend moveend", updateSVG);
