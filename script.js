@@ -374,6 +374,8 @@ function showInfoPane(imageSrc, caption, persistent = false) {
 }
 let activePip = null; // Tracks the currently active (persistent) pip
 
+
+
 function renderInteractivePip(index, imagePath, captionKey) {
   const pipData = processedFlightTrack[index];
   const [x, y] = projectPoint(pipData.lat, pipData.lon);
@@ -469,7 +471,7 @@ const pipIndices = [1, 14, 44, 77, 79, 80, 94, 97, 98, 101, 102, 103, 104, 107, 
 
 
 // Keep track of the currently active pip index
-let activePipIndex = null;
+let activePipIndex = 0; // default to first pip
 
 // Function to activate a pip by index
 function activatePip(index) {
@@ -498,6 +500,54 @@ function activatePip(index) {
   map.setView(latLng, zoomLevel);
 
   
+}
+function activatePreviousPip() {
+  if (activePipIndex > 0) {
+      activatePipByIndex(activePipIndex - 1);
+  }
+}
+
+function activateNextPip() {
+  if (activePipIndex < pipIndices.length - 1) {
+      activatePipByIndex(activePipIndex + 1);
+  }
+}
+
+
+function activatePipByIndex(index) {
+  const pipData = processedFlightTrack[pipIndices[index]];
+  const latLng = L.latLng(pipData.lat, pipData.lon);
+  map.setView(latLng, map.getZoom());
+
+  if (activePip) {
+      d3.select(activePip).attr("r", 6).attr("fill", "dark-gray");
+  }
+
+  activePipIndex = index;
+  activePip = d3.select(`#pip-${pipIndices[index]}`).node();
+  d3.select(activePip).attr("r", 8).attr("fill", "green");
+
+  const imagePath = `/data/images/image${pipIndices[index]}.jpg`;
+  const caption = captions[pipIndices[index]] || "No caption available";
+  showInfoPane(imagePath, caption, true);
+}
+
+const infoImage = document.getElementById("info-image");
+
+if (infoImage) {
+  infoImage.addEventListener("click", (event) => {
+      const rect = infoImage.getBoundingClientRect();
+      const clickX = event.clientX - rect.left;
+      const width = rect.width;
+
+      if (clickX < width / 3) {
+          activatePreviousPip();
+      } else if (clickX > (2 * width) / 3) {
+          activateNextPip();
+      }
+  });
+} else {
+  console.error("infoImage element not found");
 }
 
 // Listen for arrow key events
