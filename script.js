@@ -1,5 +1,6 @@
 // Initialize the Leaflet map
-const map = L.map("map", { maxZoom: 11 }).setView([38.8945,-77.0104], 7);
+const map = L.map("map", { maxZoom: 11 }).setView([38.8945,-77.0104], 
+  7);
 
 L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
   maxZoom: 11,
@@ -515,11 +516,31 @@ function activatePreviousPip() {
 function activateNextPip() {
   if (activePipIndex < pipIndices.length - 1) {
       activatePipByIndex(activePipIndex + 1);
-      
-
+      const zoomLevel = map.getZoom();
+      const shiftFactor = 3 / Math.pow(2, zoomLevel - map.getMinZoom()); // Adjust shift based on zoom
+      const latLng = L.latLng(pipData.lat, pipData.lon + shiftFactor);
+      map.setView(latLng, zoomLevel);
   }
 }
 
+function adjustImageSize() {
+  const infoImage = document.getElementById("info-image");
+  if (window.innerWidth > window.innerHeight) {
+    // Landscape mode
+    infoImage.style.maxHeight = "50vh";
+    infoImage.style.maxWidth = "70vw";
+  } else {
+    // Portrait mode
+    infoImage.style.maxHeight = "70vh";
+    infoImage.style.maxWidth = "85vw";
+  }
+}
+
+// Attach the event listener to window resize
+window.addEventListener("resize", adjustImageSize);
+
+// Call the function initially to set the correct size
+adjustImageSize();
 
 function activatePipByIndex(index) {
   const pipData = processedFlightTrack[pipIndices[index]];
