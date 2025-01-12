@@ -389,7 +389,7 @@ function renderInteractivePip(index, imagePath, captionKey) {
     .attr("stroke-width", 2)
     .on("mouseover", function () {
       if (activePip !== this) {
-        d3.select(this).attr("r", 8).attr("fill", "green"); // Highlight on hover
+        d3.select(this).attr("r", 9).attr("fill", "green"); // Highlight on hover
         showInfoPane(imagePath, captions[captionKey]);
       }
     })
@@ -411,8 +411,11 @@ function renderInteractivePip(index, imagePath, captionKey) {
       // Set this pip as active
       activePip = this;
       activePipIndex = pipIndices.indexOf(index); // Set active pip index
-      d3.select(this).attr("r", 8).attr("fill", "green");
+      d3.select(this).attr("r", 9).attr("fill", "green");
       showInfoPane(imagePath, captions[captionKey], true);
+      // Pan the map to the pip location
+      const latLng = L.latLng(pipData.lat, pipData.lon+3);
+      map.setView(latLng, map.getZoom());
     });
 }
 
@@ -479,7 +482,7 @@ function activatePip(index) {
   const imagePath = `/data/images/image${pipIndices[activePipIndex]}.jpg`;
   const caption = captions[pipIndices[activePipIndex]];
 
-  d3.select(pipId).attr("r", 8).attr("fill", "green");
+  d3.select(pipId).attr("r", 9).attr("fill", "green");
   showInfoPane(imagePath, caption, true);
 
   // Pan the map to the pip location
