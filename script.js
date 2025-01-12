@@ -524,5 +524,26 @@ pipIndices.forEach((index) => {
   renderInteractivePip(index, `/data/images/image${index}.jpg`, index);
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+  // Get the message pane and close button
+  const messagePane = document.getElementById("map-message-pane");
+  const closeButton = document.getElementById("close-message-btn");
+
+  // Show the message pane on first load
+  messagePane.style.display = "flex";
+
+  // Hide the pane when the "Close" button is clicked
+  closeButton.addEventListener("click", () => {
+    messagePane.style.display = "none";
+  });
+
+  // Optional: Hide the pane when clicking outside the content
+  messagePane.addEventListener("click", (event) => {
+    if (event.target === messagePane) {
+      messagePane.style.display = "none";
+    }
+  });
+});
+
 // Attach update event listeners to the map
 map.on("zoomend moveend", updateSVG);
