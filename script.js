@@ -299,7 +299,7 @@ const captions = {
   136: "Looking past Sayreville, NJ in the foreground to New Brunswick in the left midground, \n and Highland Park, Piscataway and Edison to the right.",
   137: "Central Jersey -- New Brunswick NJ on the left, with Newark, NJ in the distance on the right.",
   140: "View of Newark, NJ and the beginning of the New York City Metropolis.",
-  142: "New Jersey and New York. Taken at 0.6x zoom, so the luminosity appears lower tahn reality.",
+  142: "New Jersey and New York. Taken at 0.6x zoom, so the luminosity appears lower than reality.",
   143: "View of New Jersey and New York City.",
   144: "Brooklyn in the foreground, with Manhattan and New Jersey in the background.",
   145: "Manhattan and downtown Brooklyn, NYC.",
@@ -498,7 +498,7 @@ function activatePip(index) {
     // Landscape: Put the pip at 25% from the left
     shiftFactorLon = 14 / Math.pow(2, zoomLevel - map.getMinZoom()); // Horizontal shift
     shiftFactorLat = 0; // No vertical shift
-    
+
   } else {
     console.log("portrait detected");
     // Portrait: Put the pip at center horizontally and 25% from the bottom
