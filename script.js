@@ -496,14 +496,14 @@ function activatePip(index) {
   if (isLandscape) {
     console.log("landscape detected");
     // Landscape: Put the pip at 25% from the left
-    shiftFactorLon = 14 / Math.pow(2, zoomLevel - map.getMinZoom()); // Horizontal shift
+    shiftFactorLon = 12 / Math.pow(2, zoomLevel - map.getMinZoom()); // Horizontal shift
     shiftFactorLat = 0; // No vertical shift
 
   } else {
     console.log("portrait detected");
     // Portrait: Put the pip at center horizontally and 25% from the bottom
     shiftFactorLon = 0; // No horizontal shift
-    shiftFactorLat = 5 / Math.pow(2, zoomLevel - map.getMinZoom()); // Vertical shift
+    shiftFactorLat = 3.5 / Math.pow(2, zoomLevel - map.getMinZoom()); // Vertical shift
   }
   const latLng = L.latLng(pipData.lat+shiftFactorLat, pipData.lon + shiftFactorLon);
   map.setView(latLng, zoomLevel);
