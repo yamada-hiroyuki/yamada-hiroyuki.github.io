@@ -3,7 +3,7 @@ const map = L.map("map", { maxZoom: 11 }).setView([38.8945,-77.0104], 7);
 
 L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
   maxZoom: 11,
-  minZoom: 7,
+  minZoom: 6,
   attribution: '© OpenStreetMap contributors, Humanitarian OpenStreetMap Team',
 }).addTo(map);
 
@@ -268,7 +268,7 @@ const flightTrack = [
 const captions = {
   1: "KCLT Airport - D / E gates. Note the size difference between the 'mainline' aircraft at D gates (left) and smaller 'regional jets' at E gates (right).",
   14: "Greensboro, NC, from 23,000' altitude and ~20 mi distance, through a cell phone telephoto lens",
-  44: "Raleigh, NC, looking northwest torward Durham, NC",
+  44: "Durham, NC looking northwest torward Greensboro, NC",
   77: "Richmond, VA, at approx 50x zoom from an altitude of 33,000'",
   79: "Zoomed in shot of Richmond, VA. Context pic a few seconds later.",
   80: "Context picture of Richmond, VA at 0.6x zoom - showing a wide view of the picture a few seconds earlier.",
@@ -296,7 +296,7 @@ const captions = {
   133: "Trenton, NJ, featuring distribution centers all over.",
   134: "Central New Jersey, showing just how lovely our highways and industrial regions can be.",
   135: "Distribution makes the world go 'round, and the NY Tristate is no exception. Massive swath of DCs on the outskirts of NYC.",
-  136: "Looking past Sayreville, NJ in the foreground to New Brunswick, NJ in the left midground, blending into Highland Park, Piscataway and Edison in the background.",
+  136: "Looking past Sayreville, NJ in the foreground to New Brunswick in the left midground, \n and Highland Park, Piscataway and Edison to the right.",
   137: "Central Jersey -- New Brunswick NJ on the left, with Newark, NJ in the distance on the right.",
   140: "View of Newark, NJ and the beginning of the New York City Metropolis.",
   142: "New Jersey and New York. Taken at 0.6x zoom, so the luminosity appears lower tahn reality.",
@@ -321,7 +321,7 @@ const captions = {
   163: "A distant view of Hartford, CT and Springfield, MA.",
   170: "Distant view of Providence, RI and Boston, MA.",
   176: "Distant view of Boston, MA. Large distribution cewnter visible in the foreground.",
-  178: "Looking down in suburban MA, showing the stark contrast between light pollution near cities and outside of them.",
+  178: "Looking down in suburban RI, showing the stark contrast between light pollution near cities and outside of them.",
   182: "Providence, RI.",
   183: "Providence, RI.",
   184: "Providence, RI.",
@@ -330,7 +330,7 @@ const captions = {
   198: "Brockton, MA, on approach to Boston Logan.",
   199: "Wide angle of Brockton, MA, on approach to Boston Logan.",
   200: "Coming in to Boston, MA, on approach to BOS Runway 27.",
-  227: "Landing on Runway 27 at Boston Logan, with the Boston skyline visible in the background.",
+  227: "Landing on Runway 27 at Boston Logan, with the Boston skyline visible in the background. ",
 };
 
 
@@ -349,7 +349,7 @@ function renderFlightTrack(data) {
     .datum(lineData)
     .attr("d", d3.line().x((d) => d[0]).y((d) => d[1]).curve(d3.curveNatural))
     .attr("stroke", "lime")
-    .attr("stroke-width", 2)
+    .attr("stroke-width", 3)
     .attr("fill", "none");
 }
 
@@ -368,7 +368,7 @@ function showInfoPane(imageSrc, caption, persistent = false) {
     document.addEventListener("click", (event) => {
       if (!infoBox.contains(event.target)) {
         infoBox.style.display = "none";
-        document.removeEventListener("click", arguments.callee);
+        // document.removeEventListener("click", arguments.callee);
       }
     });
   }
@@ -390,12 +390,18 @@ function renderInteractivePip(index, imagePath, captionKey) {
     .attr("stroke-width", 2)
     .on("mouseover", function () {
       if (activePip !== this) {
-        d3.select(this).attr("r", 10).attr("fill", "lime"); // Highlight on hover
-        showInfoPane(imagePath, captions[captionKey]);
-      }
+        console.log(this);
+        let mouseoverPipIndex = this.id.split('-')[1];
+        console.log("mouseover index is");
+        console.log(mouseoverPipIndex);
+        // d3.select(this).attr("r", 10).attr("fill", "lime"); // Highlight on hover
+        // showInfoPane(imagePath, captions[captionKey]);
+        activatePip()
+        }
     })
     .on("mouseout", function () {
       if (activePip !== this) {
+        console.log(split(this.id,"-")[1]);
         d3.select(this).attr("r", 6).attr("fill", "dark-gray"); // Reset pip styling
         const infoBox = document.getElementById("info-box");
         infoBox.style.display = "none"; // Hide info pane
@@ -403,7 +409,6 @@ function renderInteractivePip(index, imagePath, captionKey) {
     })
     .on("click", function (event) {
       event.stopPropagation(); // Prevent bubbling to hide the pane
-
       // Deactivate any previously active pip
       if (activePip) {
         d3.select(activePip).attr("r", 6).attr("fill", "dark-gray");
@@ -412,13 +417,9 @@ function renderInteractivePip(index, imagePath, captionKey) {
       // Set this pip as active
       activePip = this;
       activePipIndex = pipIndices.indexOf(index); // Set active pip index
-      d3.select(this).attr("r", 10).attr("fill", "lime");
-      showInfoPane(imagePath, captions[captionKey], true);
-      // Pan the map to the pip location
-      const zoomLevel = map.getZoom();
-      const shiftFactor = 3 / Math.pow(2, zoomLevel - map.getMinZoom()); // Adjust shift based on zoom
-      const latLng = L.latLng(pipData.lat, pipData.lon + shiftFactor);
-      map.setView(latLng, zoomLevel);
+      activatePip(activePipIndex)
+      // d3.select(this).attr("r", 10).attr("fill", "lime");
+      // showInfoPane(imagePath, captions[captionKey], true);
     });
 }
 
@@ -430,14 +431,7 @@ map.on("click", () => {
     const infoBox = document.getElementById("info-box");
     infoBox.style.display = "none"; // Hide the info pane
     activePip = null; // Reset the active pip tracker
-    // Pan the map to the pip location
-    const zoomLevel = map.getZoom();
-    const shiftFactor = 3 / Math.pow(2, zoomLevel - map.getMinZoom()); // Adjust shift based on zoom
-    const latLng = L.latLng(pipData.lat, pipData.lon + shiftFactor);
-    map.setView(latLng, zoomLevel);
-  }
-
-});
+}});
 
 
 // Update the SVG on map interaction
@@ -490,15 +484,39 @@ function activatePip(index) {
   const pipData = processedFlightTrack[pipIndices[activePipIndex]];
   const imagePath = `/data/images/image${pipIndices[activePipIndex]}.jpg`;
   const caption = captions[pipIndices[activePipIndex]];
-
+  console.log(pipData)
   d3.select(pipId).attr("r", 10).attr("fill", "lime");
+  const zoomLevel = map.getZoom();
+  let shiftFactorLat = 0; // Vertical shift
+  let shiftFactorLon = 0; // Horizontal shift
+
+  // Detect screen orientation: landscape or portrait
+  const isLandscape = window.innerWidth > window.innerHeight;
+  console.log(isLandscape);
+
+  if (isLandscape) {
+    console.log("landscape detected");
+    // Landscape: Put the pip at 25% from the left
+    shiftFactorLon = 14 / Math.pow(2, zoomLevel - map.getMinZoom()); // Horizontal shift
+    shiftFactorLat = 0; // No vertical shift
+  } else {
+    console.log("portrait detected");
+    // Portrait: Put the pip at center horizontally and 25% from the bottom
+    shiftFactorLon = 0; // No horizontal shift
+    shiftFactorLat = 5 / Math.pow(2, zoomLevel - map.getMinZoom()); // Vertical shift
+  }
+  const latLng = L.latLng(pipData.lat+shiftFactorLat, pipData.lon + shiftFactorLon);
+  map.setView(latLng, zoomLevel);
   showInfoPane(imagePath, caption, true);
 
-  // Pan the map to the pip location
-  const zoomLevel = map.getZoom();
-  const shiftFactor = 3 / Math.pow(2, zoomLevel - map.getMinZoom()); // Adjust shift based on zoom
-  const latLng = L.latLng(pipData.lat, pipData.lon + shiftFactor);
-  map.setView(latLng, zoomLevel);
+  // // Pan the map to the pip location
+  // const zoomLevel = map.getZoom();
+  // const shiftFactor = 3 / Math.pow(2, zoomLevel - map.getMinZoom()); // Adjust shift based on zoom
+  // const latLng = L.latLng(pipData.lat, pipData.lon + shiftFactor);
+  // map.setView(latLng, zoomLevel);
+
+  // Pan the map to the pip location based on screen orientation
+
 }
 
 // Listen for arrow key events
@@ -547,38 +565,34 @@ infoImage.addEventListener("click", (event) => {
   }
 });
 
-function setActivePip(index) {
-  const pipData = processedFlightTrack[index];
-  // Center the map on the new pip
-  const zoomLevel = map.getZoom();
-  const shiftFactor = 3 / Math.pow(2, zoomLevel - map.getMinZoom()); // Adjust shift based on zoom
-  const latLng = L.latLng(pipData.lat, pipData.lon + shiftFactor);
-  map.setView(latLng, zoomLevel);
+// function setActivePip(index) {
+//   const pipData = processedFlightTrack[index];
+//   // Update the active pip's style
+//   if (activePip) {
+//     d3.select(activePip).attr("r", 6).attr("fill", "dark-gray"); // Reset previous pip
+//   }
 
-  // Update the active pip's style
-  if (activePip) {
-    d3.select(activePip).attr("r", 6).attr("fill", "dark-gray"); // Reset previous pip
-  }
+//   activePip = d3.select(`#pip-${index}`).node();
+//   d3.select(activePip).attr("r", 8).attr("fill", "lime"); // Highlight new pip
 
-  activePip = d3.select(`#pip-${index}`).node();
-  d3.select(activePip).attr("r", 8).attr("fill", "lime"); // Highlight new pip
-
-  // Update the info pane
-  const imagePath = `/data/images/image${index}.jpg`;
-  showInfoPane(imagePath, captions[index], true);
-}
+//   // Update the info pane
+//   const imagePath = `/data/images/image${index}.jpg`;
+//   showInfoPane(imagePath, captions[index], true);
+// }
 
 // Ensure active pip updates when switching
+
+
 function activateNextPip() {
   currentIndex = (currentIndex + 1) % pipIndices.length; // Loop to the first pip
   const nextIndex = pipIndices[currentIndex];
-  setActivePip(nextIndex);
+  activatePip(nextIndex);
 }
 
 function activatePreviousPip() {
   currentIndex = (currentIndex - 1 + pipIndices.length) % pipIndices.length; // Loop to the last pip
   const prevIndex = pipIndices[currentIndex];
-  setActivePip(prevIndex);
+  activatePip(prevIndex);
 }
 
 // Loop through the list and render pips
