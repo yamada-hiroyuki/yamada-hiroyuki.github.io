@@ -496,7 +496,7 @@ function activatePip(index) {
   if (isLandscape) {
     console.log("landscape detected");
     // Landscape: Put the pip at 25% from the left
-    shiftFactorLon = 12 / Math.pow(2, zoomLevel - map.getMinZoom()); // Horizontal shift
+    shiftFactorLon = 8 / Math.pow(2, zoomLevel - map.getMinZoom()); // Horizontal shift
     shiftFactorLat = 0; // No vertical shift
 
   } else {
