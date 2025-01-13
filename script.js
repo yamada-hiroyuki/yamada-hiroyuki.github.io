@@ -394,9 +394,8 @@ function renderInteractivePip(index, imagePath, captionKey) {
         let mouseoverPipIndex = this.id.split('-')[1];
         console.log("mouseover index is");
         console.log(mouseoverPipIndex);
-        // d3.select(this).attr("r", 10).attr("fill", "lime"); // Highlight on hover
-        // showInfoPane(imagePath, captions[captionKey]);
-        activatePip()
+        d3.select(this).attr("r", 10).attr("fill", "lime"); // Highlight on hover
+        showInfoPane(imagePath, captions[captionKey]);
         }
     })
     .on("mouseout", function () {
@@ -499,6 +498,7 @@ function activatePip(index) {
     // Landscape: Put the pip at 25% from the left
     shiftFactorLon = 14 / Math.pow(2, zoomLevel - map.getMinZoom()); // Horizontal shift
     shiftFactorLat = 0; // No vertical shift
+    
   } else {
     console.log("portrait detected");
     // Portrait: Put the pip at center horizontally and 25% from the bottom
@@ -549,21 +549,38 @@ const infoImage = document.getElementById("info-image");
 
 // Add event listener for tap actions
 infoImage.addEventListener("click", (event) => {
+  if (!pipIndices.length) return;
   const rect = infoImage.getBoundingClientRect(); // Get the dimensions of the image
   const clickX = event.clientX - rect.left; // X-coordinate of the click relative to the image
   const width = rect.width;
 
   if (clickX < width / 3) {
     // Left third: Go to previous pip
-    activatePreviousPip();
+    // Move to the previous pip
+    if (activePipIndex === null) {
+      activatePip(pipIndices.length - 1); // Start with the last pip if none is active
+    } else {
+      activatePip(
+        (activePipIndex - 1 + pipIndices.length) % pipIndices.length
+      );
+    }
+    event.preventDefault();
   } else if (clickX > (2 * width) / 3) {
     // Right third: Go to next pip
-    activateNextPip();
+    // Move to the next pip
+    if (activePipIndex === null) {
+      activatePip(0); // Start with the first pip if none is active
+    } else {
+      activatePip((activePipIndex + 1) % pipIndices.length);
+    }
+    event.preventDefault();
   } else {
     // Middle third: Optional behavior (e.g., no action or show/hide details)
     console.log("Tapped on the middle third");
   }
 });
+
+
 
 // function setActivePip(index) {
 //   const pipData = processedFlightTrack[index];

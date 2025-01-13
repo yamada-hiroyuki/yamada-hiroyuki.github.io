@@ -23,14 +23,14 @@ body {
   }
   #info-box {
     position: fixed; /* Keeps the info pane anchored to the viewport */
-    top: 10%; /* Adjust for better visibility */
-    right: 10%;
+    top: 5%; /* Adjust for better visibility */
+    right: 5%;
     background-color: rgba(30, 30, 30, 0.9); /* Ensure the background is opaque enough */
     color: white;
     border: 1px solid lime;
     border-radius: 5px;
     padding: 10px;
-    max-width: 80vw;
+    max-width: 88vw;
     /* width: 768px;  */
     max-height: 80vh; 
     height: auto;
@@ -40,7 +40,7 @@ body {
   }
   
   #info-box img {
-    max-width: 80vw;
+    max-width: 88vw;
     max-height: 72vh;
     border-radius: 5px;
     margin-bottom: 10px;
