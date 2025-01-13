@@ -388,24 +388,24 @@ function renderInteractivePip(index, imagePath, captionKey) {
     .attr("fill", "dark-gray")
     .attr("stroke", "white")
     .attr("stroke-width", 2)
-    .on("mouseover", function () {
-      if (activePip !== this) {
-        console.log(this);
-        let mouseoverPipIndex = this.id.split('-')[1];
-        console.log("mouseover index is");
-        console.log(mouseoverPipIndex);
-        d3.select(this).attr("r", 10).attr("fill", "lime"); // Highlight on hover
-        showInfoPane(imagePath, captions[captionKey]);
-        }
-    })
-    .on("mouseout", function () {
-      if (activePip !== this) {
-        console.log(split(this.id,"-")[1]);
-        d3.select(this).attr("r", 6).attr("fill", "dark-gray"); // Reset pip styling
-        const infoBox = document.getElementById("info-box");
-        infoBox.style.display = "none"; // Hide info pane
-      }
-    })
+    // .on("mouseover", function () {
+    //   if (activePip !== this) {
+    //     console.log(this);
+    //     let mouseoverPipIndex = this.id.split('-')[1];
+    //     console.log("mouseover index is");
+    //     console.log(mouseoverPipIndex);
+    //     d3.select(this).attr("r", 10).attr("fill", "lime"); // Highlight on hover
+    //     showInfoPane(imagePath, captions[captionKey]);
+    //     }
+    // })
+    // .on("mouseout", function () {
+    //   if (activePip !== this) {
+    //     console.log(split(this.id,"-")[1]);
+    //     d3.select(this).attr("r", 6).attr("fill", "dark-gray"); // Reset pip styling
+    //     const infoBox = document.getElementById("info-box");
+    //     infoBox.style.display = "none"; // Hide info pane
+    //   }
+    // })
     .on("click", function (event) {
       event.stopPropagation(); // Prevent bubbling to hide the pane
       // Deactivate any previously active pip
