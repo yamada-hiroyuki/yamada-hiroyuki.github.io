@@ -457,12 +457,8 @@ function updateSVG() {
 updateSVGBounds();
 renderFlightTrack(processedFlightTrack);
 
-
-
 // List of integers for the pips to render
 const pipIndices = [1, 14, 44, 77, 79, 80, 94, 97, 98, 101, 102, 103, 104, 107, 111, 116, 118, 120, 122, 123, 124, 125, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 140, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 155, 157, 158, 159, 160, 161, 162, 163, 170, 176, 178, 182, 183, 184, 185, 187, 198, 199, 200, 227,];
-
-
 
 // Keep track of the currently active pip index
 let activePipIndex = null;
@@ -508,18 +504,9 @@ function activatePip(index) {
   const latLng = L.latLng(pipData.lat+shiftFactorLat, pipData.lon + shiftFactorLon);
   map.setView(latLng, zoomLevel);
   showInfoPane(imagePath, caption, true);
-
-  // // Pan the map to the pip location
-  // const zoomLevel = map.getZoom();
-  // const shiftFactor = 3 / Math.pow(2, zoomLevel - map.getMinZoom()); // Adjust shift based on zoom
-  // const latLng = L.latLng(pipData.lat, pipData.lon + shiftFactor);
-  // map.setView(latLng, zoomLevel);
-
-  // Pan the map to the pip location based on screen orientation
-
 }
 
-// Listen for arrow key events
+// Listen for  key events
 document.addEventListener("keydown", (event) => {
   if (!pipIndices.length) return;
 
@@ -541,6 +528,20 @@ document.addEventListener("keydown", (event) => {
       );
     }
     event.preventDefault();
+  } else if (event.key === "Escape") {
+    // Deactivate the active pip and hide the info box
+    if (activePip) {
+      d3.select(activePip).attr("r", 6).attr("fill", "dark-gray"); // Reset active pip styling
+      const infoBox = document.getElementById("info-box");
+      infoBox.style.display = "none"; // Hide the info pane
+      activePip = null; // Reset the active pip tracker
+    }
+
+    // Clear the active pip index as well
+    activePipIndex = null;
+
+    console.log("Pip deactivated and info box hidden.");
+    event.preventDefault();
   }
 });
 
@@ -556,7 +557,6 @@ infoImage.addEventListener("click", (event) => {
 
   if (clickX < width / 3) {
     // Left third: Go to previous pip
-    // Move to the previous pip
     if (activePipIndex === null) {
       activatePip(pipIndices.length - 1); // Start with the last pip if none is active
     } else {
@@ -581,21 +581,6 @@ infoImage.addEventListener("click", (event) => {
 });
 
 
-
-// function setActivePip(index) {
-//   const pipData = processedFlightTrack[index];
-//   // Update the active pip's style
-//   if (activePip) {
-//     d3.select(activePip).attr("r", 6).attr("fill", "dark-gray"); // Reset previous pip
-//   }
-
-//   activePip = d3.select(`#pip-${index}`).node();
-//   d3.select(activePip).attr("r", 8).attr("fill", "lime"); // Highlight new pip
-
-//   // Update the info pane
-//   const imagePath = `/data/images/image${index}.jpg`;
-//   showInfoPane(imagePath, captions[index], true);
-// }
 
 // Ensure active pip updates when switching
 
