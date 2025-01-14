@@ -1,0 +1,130 @@
+body {
+    margin: 0;
+    background-color: #202123; /* ChatGPT dark background */
+    font-family: Arial, sans-serif;
+  }
+  
+  #map {
+    width: 100vw;
+    height: 100vh;
+    z-index: 1; /* Ensure the map has a lower z-index */
+    position: relative; /* Required for z-index to work */
+  }
+
+  #map-container {
+    position: relative;
+  }
+  
+  #svg-map {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10; /* Ensure flight track SVG is above other layers */
+  }
+  #info-box {
+    position: fixed; /* Keeps the info pane anchored to the viewport */
+    top: 5%; /* Adjust for better visibility */
+    right: 5%;
+    background-color: rgba(30, 30, 30, 0.9); /* Ensure the background is opaque enough */
+    color: white;
+    border: 1px solid lime;
+    border-radius: 5px;
+    padding: 10px;
+    max-width: 88vw;
+    /* width: 768px;  */
+    max-height: 80vh; 
+    height: auto;
+    display: none; /* Hidden by default */
+    z-index: 1000; /* Ensure it appears on top of the map */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.7); /* Optional: adds a shadow */
+  }
+  
+  #info-box img {
+    max-width: 88vw;
+    max-height: 72vh;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  
+  #info-box p {
+    margin: 0;
+    font-size: 18px; /* Adjust text size for readability */
+  }
+  
+
+/* Inlaid window styles */
+.inlaid-window {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it overlays everything */
+  display: none; /* Hidden by default */
+}
+
+
+
+.inlaid-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%; /* Full width on mobile */
+  max-width: 600px; /* Limit width on larger screens */
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.inlaid-content p {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+
+#close-message-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 100%; /* Full width for mobile */
+  max-width: 200px; /* Limit width for larger screens */
+}
+
+#close-message-btn:hover {
+  background: #0056b3;
+}
+
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .inlaid-content {
+    padding: 15px; /* Reduce padding on smaller screens */
+    font-size: 14px; /* Smaller text for mobile */
+  }
+
+  #close-message-btn {
+    font-size: 13px; /* Adjust button text size */
+    padding: 8px 16px; /* Smaller button */
+  }
+}
+
+@media (max-width: 480px) {
+  .inlaid-content {
+    font-size: 12px; /* Smaller text for very small screens */
+    border-radius: 5px; /* Smaller border radius */
+  }
+
+  #close-message-btn {
+    font-size: 12px; /* Further reduce button text size */
+  }
+}
+
+  

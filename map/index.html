@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Flight Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div id="map"></div>
+<div id="map-message-pane" class="inlaid-window">
+  <div class="inlaid-content">
+    <p>On a recent flight from KCLT to KBOS, I took pictures highlighting cities along the Boston-Washington Northeast Corridor. Spanning some 400 miles, comprising over 50 million residents, Boswash is the largest megalopolis in the world.</p>
+    <button id="close-message-btn">Show me!</button>
+  </div>
+</div>
+<div class="info-box" id="info-box">
+  <img id="info-image" src="" alt="">
+  <p id="info-text"></p>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
