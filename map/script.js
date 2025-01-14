@@ -7,7 +7,6 @@ L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
   attribution: '© OpenStreetMap contributors, Humanitarian OpenStreetMap Team',
 }).addTo(map);
 
-let currentIndex = 0;
 // Create an SVG layer within Leaflet's overlay pane
 const svgOverlay = d3.select(map.getPanes().overlayPane).append("svg");
 const g = svgOverlay.append("g").attr("class", "leaflet-zoom-hide");
@@ -32,6 +31,43 @@ function updateSVGBounds() {
 
   g.attr("transform", `translate(${-topLeft.x}, ${-topLeft.y})`);
 }
+
+
+// Fetch and process flight track data
+let flightTrack2 = [];
+
+fetch('/data/flight-track.json') 
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then((data) => {
+    flightTrack2 = data.map((item) => ({
+      lat: parseFloat(item.Latitude),
+      lon: parseFloat(item.Longitude),
+      time: item.Time,
+    }));
+
+    console.log("Flight track data loaded:", flightTrack2);
+
+    // Call your initialization or rendering functions here
+   
+  })
+  .catch((error) => {
+    console.error("Failed to fetch flight track data:", error);
+  });
+
+// Example initialization function
+function initializeMap(FlightTrack) {
+  console.log("Initializing map with data",flightTrack);
+  // Add your map rendering logic here
+}
+
+
+// initializeMap(flightTrack);
+
 
 // Preprocess flight track data
 const flightTrack = [
@@ -353,6 +389,8 @@ function renderFlightTrack(data) {
     .attr("fill", "none");
 }
 
+
+
 // Helper to show the info pane
 function showInfoPane(imageSrc, caption, persistent = false) {
   const infoBox = document.getElementById("info-box");
@@ -373,6 +411,8 @@ function showInfoPane(imageSrc, caption, persistent = false) {
     });
   }
 }
+
+let currentIndex = 0;
 let activePip = null; // Tracks the currently active (persistent) pip
 
 function renderInteractivePip(index, imagePath, captionKey) {
@@ -473,6 +513,7 @@ function activatePip(index) {
 
   // Update the active pip index
   activePipIndex = index;
+  console.log("activePipIndex",index);
 
   // Activate the new pip
   const pipId = `#pip-${pipIndices[activePipIndex]}`;
@@ -487,14 +528,11 @@ function activatePip(index) {
 
   // Detect screen orientation: landscape or portrait
   const isLandscape = window.innerWidth > window.innerHeight;
-  console.log(isLandscape);
-
   if (isLandscape) {
     console.log("landscape detected");
     // Landscape: Put the pip at 25% from the left
     shiftFactorLon = 8 / Math.pow(2, zoomLevel - map.getMinZoom()); // Horizontal shift
     shiftFactorLat = 0; // No vertical shift
-
   } else {
     console.log("portrait detected");
     // Portrait: Put the pip at center horizontally and 25% from the bottom
