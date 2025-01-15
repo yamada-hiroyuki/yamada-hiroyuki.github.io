@@ -65,7 +65,7 @@ function initializeMap(FlightTrack) {
   // Add your map rendering logic here
 }
 
-
+console.log(flightTrack2);
 // initializeMap(flightTrack);
 
 
@@ -369,6 +369,8 @@ const captions = {
   227: "Landing on Runway 27 at Boston Logan, with the Boston skyline visible in the background. ",
 };
 
+
+// TODO rewrite caption object as a map, ingest from separate file. think about long term needs for the object class. 
 
 
 const processedFlightTrack = flightTrack.map((d) => ({
